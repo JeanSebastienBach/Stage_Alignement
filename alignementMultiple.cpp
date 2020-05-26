@@ -5,7 +5,7 @@ HLIN610 - Stage CMI Informatique : Alignement multiple de séquences, arbre phyl
 - Jérémie ROUX      
 (L3 GROUPE C)  
 
-Alignement de 2 séquences
+Alignement multiple
 */
 
 #include <iostream>
@@ -77,6 +77,17 @@ void afficherMatrice(vector< vector<int> > M, string mot1, string mot2){
 	cout<<endl;
 }
 
+void afficherMatriceScore(vector< vector<int> > S, int nb){
+	int ecart=3;
+	for(int i=1; i<nb; i++){
+		for(int j=1; j<nb; j++){
+			cout<<setw(ecart)<<S[i][j];
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+}
+
 int alignement(vector< vector<int> > M, string mot1, string mot2){
 	int score=0;
 	string mot1modif="";
@@ -138,26 +149,38 @@ int alignement(vector< vector<int> > M, string mot1, string mot2){
 
 
 int main(int argc, char *argv[]){
-	if(argc!=3){
-		cout<<"Il faut exactement 2 mots à aligner."<<endl;
+	if(argc<=2){
+		cout<<"Il faut 2 mots ou plus à aligner."<<endl;
 	}
 	else{
-		// Récupération des 2 mots
-		string mot1 = argv[2];
-		string mot2 = argv[1];
+		// Affichage des mots
 		cout<<"MOTS À ALIGNER : "<<endl;
-		cout<<"1) "<<mot1<<" (Taille : "<<mot1.size()<<")"<<endl;
-		cout<<"2) "<<mot2<<" (Taille : "<<mot2.size()<<")"<<endl<<endl;
-
+		for(int i=1; i<argc; i++){
+			string mot = argv[i];
+			cout<<i<<") "<<mot<<" (Taille : "<<mot.size()<<")"<<endl;
+		}
+		cout<<endl;
+		
 		// Scores d'alignement
 		int indel = 1;
 		int mismatch = 1;
 		int match = 0;
 
-		vector< vector<int> > M = remplissageMatrice(mot1,mot2,indel,mismatch,match);
-		afficherMatrice(M,mot1,mot2);
-		int score = alignement(M,mot1,mot2);
-		cout<<score<<endl<<endl;
+		// Matrice de scores
+		vector< vector<int> > S(argc+1, vector<int>(argc+1));
+
+		for(int i=1; i<argc; i++){
+			for(int j=i+1; j<argc; j++){
+				string mot1 = argv[i];
+				string mot2 = argv[j];
+				vector< vector<int> > M = remplissageMatrice(mot1,mot2,indel,mismatch,match);
+				S[i][j] = alignement(M,mot1,mot2);
+				cout<<S[i][j]<<endl;
+			}
+		}
+
+		afficherMatriceScore(S, argc);
+
 	}
 	
 	return 0;
