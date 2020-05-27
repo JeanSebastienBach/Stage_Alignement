@@ -8,7 +8,6 @@
 
 using namespace std;
 string nucleotideHasard(float matriceProba[]){
-	srand(time(NULL));
 	int p = rand() % 1001;
 	if(p<=matriceProba[0]*1000){
 		return "A";
@@ -60,11 +59,26 @@ string generation(int t){
 	return sequence;
 } 
 
+string suppressionNucleotide(string sequence,int position){
+	string resultat = sequence.substr(0,position);
+	resultat += sequence.substr(position+1,sequence.size());
+	return resultat;
+}
+
+string duplicationNucleotide(string sequence,int position){
+	string resultat = sequence.substr(0,position+1);
+	resultat += sequence.substr(position,sequence.size());
+	return resultat;
+}
+
 vector<string> generationMutation(string s,int nbSeq){
 	vector<string> res;
 	res.push_back(s);
 	
-	float probaMutationNucleo = 0.016;
+	float probaMutationNucleotide = 0.016;
+	float probaDuplicationNucleotide = 0.25;
+	float probaSuppressionNucleotide = 0.25;
+	float probaChangementNucleotide = 0.50;
 	int valeurGenerer = 0;
 	int x = 0;
 	int nbModifNucleotide = 0;
@@ -77,27 +91,33 @@ vector<string> generationMutation(string s,int nbSeq){
 		while((i<res.size())&&(res.size()<nbSeq)){
 			nouvelleSeq=res[i];
 			for(int j=0;j<nouvelleSeq.size();j++){
-				srand(time(NULL)+x);
 				x++;
 				valeurGenerer = rand() % 10001;
-				if(valeurGenerer <= probaMutationNucleo*10000){
-					ancienNucleotide = nouvelleSeq[j];
-					nbModifNucleotide++;
+				if(valeurGenerer <= probaMutationNucleotide*10000){
+					valeurGenerer = rand() % 1001;
 					float mutationSequence[4] = {0.3333,0.3333,0.3333,0.3333};
-					if(ancienNucleotide=='A'){
-						mutationSequence[0]=0.000;
-						nouveauNucleotide = nucleotideHasard(mutationSequence);
-					}else if(ancienNucleotide=='C'){
-						mutationSequence[1]=0.000;
-						nouveauNucleotide = nucleotideHasard(mutationSequence);
-					}else if(ancienNucleotide=='G'){
-						mutationSequence[2]=0.000;
-						nouveauNucleotide = nucleotideHasard(mutationSequence);
-					}else if(ancienNucleotide=='U'){
-						mutationSequence[3]=0.000;
-						nouveauNucleotide = nucleotideHasard(mutationSequence);
+					if(valeurGenerer <= probaDuplicationNucleotide*1000){
+						nouvelleSeq = duplicationNucleotide(nouvelleSeq,j);  
+					}else if(valeurGenerer <= (probaDuplicationNucleotide + probaSuppressionNucleotide)*1000){
+						nouvelleSeq = suppressionNucleotide(nouvelleSeq,j);
+					}else {
+						ancienNucleotide = nouvelleSeq[j];
+						if(ancienNucleotide=='A'){
+							mutationSequence[0]=0.000;
+							nouveauNucleotide = nucleotideHasard(mutationSequence);
+						}else if(ancienNucleotide=='C'){
+							mutationSequence[1]=0.000;
+							nouveauNucleotide = nucleotideHasard(mutationSequence);
+						}else if(ancienNucleotide=='G'){
+							mutationSequence[2]=0.000;
+							nouveauNucleotide = nucleotideHasard(mutationSequence);
+						}else if(ancienNucleotide=='U'){
+							mutationSequence[3]=0.000;
+							nouveauNucleotide = nucleotideHasard(mutationSequence);
+						}
+						nouvelleSeq[j] = nouveauNucleotide[0];
 					}
-					nouvelleSeq[j] = nouveauNucleotide[0];
+					nbModifNucleotide++;
 				}
 			}
 			if(nbModifNucleotide > 0){
@@ -115,6 +135,7 @@ int main(int argc, char** argv,char** env){
 	if(argc<4){
 		cout<<"La génération nécessite <mode> <taille_des_séquences_à_générer> <nombre_de_séquences_à_générer> "<<endl;
 	}else {
+		srand(time(NULL));
 		string s ="";
 		int tailleSeq = stoi(argv[2]);
 		int nbSeq = stoi(argv[3]);
