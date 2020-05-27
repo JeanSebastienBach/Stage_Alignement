@@ -20,7 +20,7 @@ string nucleotideHasard(float matriceProba[]){
 		return "G";
 	}
 	else{
-		return "T";
+		return "U";
 	}
 }
 
@@ -40,7 +40,7 @@ string generation(int t){
 		float sequenceA[4] = {0.300,0.205,0.285,0.210};
 		float sequenceC[4] = {0.322,0.298,0.078,0.302};
 		float sequenceG[4] = {0.248,0.246,0.298,0.208};
-		float sequenceT[4] = {0.177,0.239,0.292,0.292};
+		float sequenceU[4] = {0.177,0.239,0.292,0.292};
 
 		if(dernierNucleotide=='A'){
 			sequence += nucleotideHasard(sequenceA);
@@ -51,8 +51,8 @@ string generation(int t){
 		else if(dernierNucleotide=='G'){
 			sequence += nucleotideHasard(sequenceG);
 		}
-		else if(dernierNucleotide=='T'){
-			sequence += nucleotideHasard(sequenceT);
+		else if(dernierNucleotide=='U'){
+			sequence += nucleotideHasard(sequenceU);
 		}
 		x++;
 	}
@@ -68,12 +68,14 @@ vector<string> generationMutation(string s,int nbSeq){
 	int valeurGenerer = 0;
 	int x = 0;
 	int nbModifNucleotide = 0;
-	char ancienNucleotide ="";
+	char ancienNucleotide;
+	string nouvelleSeq="";
+	string nouveauNucleotide="";
+	int i = 0;
 	while (res.size()<nbSeq){
-		string nouvelleSeq="";
-		for(int i=0;i<res.size();i++){
+		i = 0;
+		while((i<res.size())&&(res.size()<nbSeq)){
 			nouvelleSeq=res[i];
-			nbModifNucleotide = 0;
 			for(int j=0;j<nouvelleSeq.size();j++){
 				srand(time(NULL)+x);
 				x++;
@@ -81,9 +83,28 @@ vector<string> generationMutation(string s,int nbSeq){
 				if(valeurGenerer <= probaMutationNucleo*10000){
 					ancienNucleotide = nouvelleSeq[j];
 					nbModifNucleotide++;
+					float mutationSequence[4] = {0.3333,0.3333,0.3333,0.3333};
+					if(ancienNucleotide=='A'){
+						mutationSequence[0]=0.000;
+						nouveauNucleotide = nucleotideHasard(mutationSequence);
+					}else if(ancienNucleotide=='C'){
+						mutationSequence[1]=0.000;
+						nouveauNucleotide = nucleotideHasard(mutationSequence);
+					}else if(ancienNucleotide=='G'){
+						mutationSequence[2]=0.000;
+						nouveauNucleotide = nucleotideHasard(mutationSequence);
+					}else if(ancienNucleotide=='U'){
+						mutationSequence[3]=0.000;
+						nouveauNucleotide = nucleotideHasard(mutationSequence);
+					}
+					nouvelleSeq[j] = nouveauNucleotide[0];
 				}
-				
 			}
+			if(nbModifNucleotide > 0){
+				nbModifNucleotide = 0;
+				res.push_back(nouvelleSeq);
+			}
+			i++;
 		}
 	}
 	
