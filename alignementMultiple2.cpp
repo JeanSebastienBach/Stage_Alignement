@@ -44,9 +44,7 @@ void remplissageMatrice(vector< vector<int> > &M, string mot1, string mot2, int 
 
 			// Remplissage
 			else{
-				cout<<"i="<<i<<" | j="<<j<<endl;
 				M[i][j]=min3(M[i-1][j-1]+matchMismatch(mot1,mot2,i-1,j-1,mismatch,match), M[i-1][j]+indel, M[i][j-1]+indel);
-				cout<<"FIN"<<endl;
 			}
 		}
 	}
@@ -79,8 +77,8 @@ void afficherMatrice(vector< vector<int> > M, string mot1, string mot2){
 
 void afficherMatriceScore(vector< vector<int> > S, int nb){
 	int ecart=3;
-	for(int i=1; i<nb; i++){
-		for(int j=1; j<nb; j++){
+	for(int i=0; i<nb; i++){
+		for(int j=0; j<nb; j++){
 			cout<<setw(ecart)<<S[i][j];
 		}
 		cout<<endl;
@@ -139,12 +137,35 @@ int alignement(vector< vector<int> > M, string mot1, string mot2, string &mot1mo
 		}
 	}
 
+	mot1modif = mot1modif+(char) NULL;
+	mot2modif = mot2modif+(char) NULL;
+
+	int id=0;
+	string buffer="";
+	while(mot1modif[id]!=(char) NULL){
+		buffer += mot1modif[id];
+		id++;
+	}
+	mot1modif=buffer;
+
+	id=0;
+	buffer="";
+	while(mot2modif[id]!=(char) NULL){
+		buffer += mot2modif[id];
+		id++;
+	}
+	mot2modif=buffer;
+
+	//cout<<mot1modif<<endl;
+	//cout<<mot2modif<<endl;
+	//cout<<score<<endl<<endl;
+
 	return score;
 }
 
-int minimumMatrice(vector< vector<int> > S, int nb, int min, int &x, int &y){
-	int result=min;
-	for(int i=1; i<nb; i++){
+void minimumMatrice(vector< vector<int> > S, int tailleMax, int nb, int &min, int &x, int &y){
+	int result=tailleMax;
+	for(int i=0; i<nb; i++){
 		for(int j=i+1; j<nb; j++){
 			if(S[i][j]<result){
 				x=i;
@@ -153,8 +174,7 @@ int minimumMatrice(vector< vector<int> > S, int nb, int min, int &x, int &y){
 			}
 		}
 	}
-
-	return result;
+	min=result;
 }
 
 
@@ -163,19 +183,21 @@ int main(int argc, char *argv[]){
 		cout<<"Il faut 2 mots ou plus à aligner."<<endl;
 	}
 	else{
+		
 		// Affichage des mots
-		cout<<"MOTS À ALIGNER : "<<endl;
-		vector<string> mots(argc);
+		int nbMots = argc-1;
 		int tailleMax = 0;
+		cout<<nbMots<<" MOTS À ALIGNER : "<<endl;
+		vector<string> mots;
 		for(int i=1; i<argc; i++){
 			string mot = argv[i];
 			cout<<i<<") "<<mot<<" (Taille : "<<mot.size()<<")"<<endl;
+			mots.push_back(mot);
 			if(tailleMax<mot.size()){
 				tailleMax=mot.size();
 			}
-			mots[i]=mot;
 		}
-		cout<<endl;
+		cout<<"Taille Max : "<<tailleMax<<endl;
 		
 		// Scores d'alignement
 		int indel = 1;
@@ -183,87 +205,47 @@ int main(int argc, char *argv[]){
 		int match = 0;
 
 		// Matrice de scores
-		vector< vector<int> > S(argc+1, vector<int>(argc+1));
-
-		for(int i=1; i<argc; i++){
-			for(int j=i+1; j<argc; j++){
-				string mot1 = mots[i];
-				string mot2 = mots[j];
+		vector< vector<int> > S(nbMots+1, vector<int>(nbMots+1));
+		for(int i=0; i<nbMots; i++){
+			for(int j=i+1; j<nbMots; j++){
 				string mot1modif = "";
 				string mot2modif = "";
-				vector< vector<int> > M1(mot1.size(), vector<int>(mot2.size()));
-				remplissageMatrice(M1,mot1,mot2,indel,mismatch,match);
-				int test = alignement(M1,mot1,mot2,mot1modif,mot2modif);
-				cout<<test<<endl;
-				S[i][j] =test;
+				vector< vector<int> > M((int) mots[i].size()+1, vector<int>((int) mots[j].size()+1));
+				remplissageMatrice(M,mots[i],mots[j],indel,mismatch,match);
+				S[i][j] = alignement(M,mots[i],mots[j],mot1modif,mot2modif);
+				M.clear();
 			}
 		}
+		//afficherMatriceScore(S,nbMots);
 
-		//cout<<"MATRICE : "<<endl;
-		//afficherMatriceScore(S, argc);
-
-		int min = tailleMax;
+		// Détection du score minimum et des mots associés
 		int x=0;
 		int y=0;
-		min = minimumMatrice(S,argc,min,x,y);
+		int a;
+		int min = tailleMax;
+		minimumMatrice(S,tailleMax,nbMots,min,x,y);
+		//cout<<"Minimum : "<<min<<" ("<<x<<","<<y<<")"<<endl;
 
 		while(min<tailleMax){
-			//cout<<"Minimum : "<<min<<" x="<<x<<" y="<<y<<endl<<endl;
 			string mot1modif = "";
 			string mot2modif = "";
-			vector< vector<int> > M2(mots[x].size(), vector<int>(mots[y].size()));
-			remplissageMatrice(M2,mots[x],mots[y],indel,mismatch,match);
-			int a;
-			a= alignement(M2,mots[x],mots[y],mot1modif,mot2modif);
-			//cout<<S[x][y]<<endl;
-			//cout<<mot1modif<<endl;
-			//cout<<mot2modif<<endl<<endl;
-			S[x][y] = tailleMax;
-			//afficherMatriceScore(S, argc);
-			mots[x] = mot1modif;
-			mots[y] = mot2modif;
-			if(mots[y].size()<mot2modif.size()){
-				//cout<<"MODIFICATION EN CASCADE"<<endl;
-				for(int j=y+1; j<argc; j++){
-					mot1modif = "";
-					mot2modif = "";
-					//cout<<mots[y]<<endl;
-					//cout<<mots[j]<<endl<<endl;
-					vector< vector<int> > M3(mots[y].size(), vector<int>(mots[j].size()));
-					remplissageMatrice(M3,mots[y],mots[j],indel,mismatch,match);
-					S[y][j] = alignement(M3,mots[y],mots[j],mot1modif,mot2modif);
-					//cout<<S[y][j]<<endl;
-					//cout<<mot1modif<<endl;
-					//cout<<mot2modif<<endl<<endl;
-				}
-				//afficherMatriceScore(S, argc);
-			}
-			if(mots[x].size()<mot2modif.size()){
-				//cout<<"MODIFICATION EN CASCADE"<<endl;
-				for(int i=x+1; i<argc; i++){
-					mot1modif = "";
-					mot2modif = "";
-					//cout<<mots[y]<<endl;
-					//cout<<mots[j]<<endl<<endl;
-					vector< vector<int> > M4(mots[i].size(), vector<int>(mots[x].size()));
-					remplissageMatrice(M4,mots[i],mots[x],indel,mismatch,match);
-					S[i][x] = alignement(M4,mots[i],mots[x],mot1modif,mot2modif);
-					//cout<<S[y][j]<<endl;
-					//cout<<mot1modif<<endl;
-					//cout<<mot2modif<<endl<<endl;
-				}
-				//afficherMatriceScore(S, argc);
-			}
+			vector< vector<int> > M((int) mots[x].size()+1, vector<int>((int) mots[y].size()+1));
+			//cout<<"OUI"<<endl;
+			remplissageMatrice(M,mots[x],mots[y],indel,mismatch,match);
+			a = alignement(M,mots[x],mots[y],mot1modif,mot2modif);
+			M.clear();
 
-			min = minimumMatrice(S,argc,tailleMax,x,y);
+			mots[x]=mot1modif;
+			mots[y]=mot2modif;
 
-			/*cout<<"MOTS ALIGNÉS : "<<endl;
-			for(int i=1; i<argc; i++){
-				cout<<mots[i]<<endl;
-			}*/
+			S[x][y]=tailleMax;
+			//afficherMatriceScore(S,nbMots);
+			minimumMatrice(S,tailleMax,nbMots,min,x,y);
+			//cout<<"Minimum : "<<min<<" ("<<x<<","<<y<<")"<<endl;
 		}
+		S.clear();
 
-		for(int i=1; i<argc; i++){
+		for(int i=0; i<nbMots; i++){
 			int id=0;
 			string buffer="";
 			while(mots[i][id]!=(char) NULL){
@@ -274,13 +256,13 @@ int main(int argc, char *argv[]){
 		}
 
 		int tailleMaximum=0;
-		for(int i=1; i<argc; i++){
+		for(int i=0; i<nbMots; i++){
 			if(tailleMaximum<mots[i].size()){
 				tailleMaximum=mots[i].size();
 			}
 		}
 
-		for(int i=1; i<argc; i++){
+		for(int i=0; i<nbMots; i++){
 			int diff=tailleMaximum-mots[i].size();
 			if(diff!=0){
 				for(int nb=0; nb<diff; nb++){
@@ -291,24 +273,25 @@ int main(int argc, char *argv[]){
 
 		bool tiret=true;
 		while(tiret){
-			for(int i=1; i<argc; i++){
+			for(int i=0; i<nbMots; i++){
 				if(mots[i][tailleMaximum-1]!='-'){
 					tiret=false;
 				}
 			}
 			if(tiret){
-				for(int i=1; i<argc; i++){
+				for(int i=0; i<nbMots; i++){
 					mots[i]=mots[i].substr(0,tailleMaximum-1);
 				}
 			}
 			tailleMaximum--;
 		}
 
-		cout<<"MOTS ALIGNÉS : "<<endl;
-		for(int i=1; i<argc; i++){
-			cout<<i<<") "<<mots[i]<<endl;
+		cout<<endl<<"MOTS ALIGNÉS : "<<endl;
+		for(int i=0; i<nbMots; i++){
+			cout<<i+1<<") "<<mots[i]<<endl;
 		}
 		cout<<endl;
+		
 	}
 	
 	return 0;

@@ -148,12 +148,13 @@ int main(int argc, char** argv,char** env){
 		}else{
 			
 			s = generation(tailleSeq);
-			cout<<s<<endl;
+			//cout<<s<<endl;
 		}
 		vector<string> ensembleSeq = generationMutation(s,nbSeq);
 		for(int i=0;i<ensembleSeq.size();i++){
-			cout<<"S["<<i<<"]="<<ensembleSeq[i]<<endl;
+			cout<<ensembleSeq[i]<<" ";
 		}
+		cout<<endl;
 	}
 	
 	return 0;

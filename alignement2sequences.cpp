@@ -28,8 +28,7 @@ int matchMismatch(string mot1, string mot2, int i, int j, int mismatch, int matc
 	return mot1[i]==mot2[j] ? match : mismatch;
 }
 
-vector< vector<int> > remplissageMatrice(string mot1, string mot2, int indel, int mismatch, int match){
-	vector< vector<int> > M(mot1.size()+1, vector<int>(mot2.size()+1));
+void remplissageMatrice(vector< vector<int> > &M, string mot1, string mot2, int indel, int mismatch, int match){
 	for(int i=0; i<=mot1.size(); i++){
 		for(int j=0; j<=mot2.size(); j++){
 			// Initialisation
@@ -49,7 +48,6 @@ vector< vector<int> > remplissageMatrice(string mot1, string mot2, int indel, in
 			}
 		}
 	}
-	return M;
 }
 
 void afficherMatrice(vector< vector<int> > M, string mot1, string mot2){
@@ -130,6 +128,25 @@ int alignement(vector< vector<int> > M, string mot1, string mot2){
 		}
 	}
 
+	mot1modif+=(char) NULL;
+	mot2modif+=(char) NULL;
+
+	int id=0;
+	string buffer="";
+	while(mot1modif[id]!=(char) NULL){
+		buffer += mot1modif[id];
+		id++;
+	}
+	mot1modif=buffer;
+
+	id=0;
+	buffer="";
+	while(mot2modif[id]!=(char) NULL){
+		buffer += mot2modif[id];
+		id++;
+	}
+	mot2modif=buffer;
+
 	cout<<mot1modif<<endl;
 	cout<<mot2modif<<endl;
 
@@ -154,7 +171,8 @@ int main(int argc, char *argv[]){
 		int mismatch = 1;
 		int match = 0;
 
-		vector< vector<int> > M = remplissageMatrice(mot1,mot2,indel,mismatch,match);
+		vector< vector<int> > M(mot1.size()+1, vector<int>(mot2.size()+1));
+		remplissageMatrice(M,mot1,mot2,indel,mismatch,match);
 		afficherMatrice(M,mot1,mot2);
 		int score = alignement(M,mot1,mot2);
 		cout<<score<<endl<<endl;
