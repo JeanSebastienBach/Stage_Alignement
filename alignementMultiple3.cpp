@@ -177,6 +177,45 @@ void minimumMatrice(vector< vector<int> > S, int tailleMax, int nb, int &min, in
 	min=result;
 }
 
+void affichageTableau(vector<int> T, int taille){
+	for(int i=0; i<taille; i++){
+		if(i==0){
+			cout<<"[";
+		}
+		cout<<T[i];
+		if(i==(taille-1)){
+			cout<<"]";
+		}
+		else{
+			cout<<",";
+		}
+	}
+	cout<<endl;
+}
+
+int minimumTableau(vector<int> T, int taille){
+	int min = T[0];
+	for(int i=1; i<taille; i++){
+		if(T[i]<min){
+			min=T[i];
+		}
+	}
+	return min;
+}
+
+// Mot avec la valeur minimale dont la taille est la plus grande
+int motValMinTableau(vector<int> T, int taille, int min, vector<string> mots){
+	int result=0;
+	int tailleMot=0;
+	for(int i=0; i<taille; i++){
+		if(T[i]==min && mots[i].size()>tailleMot){
+			result=i;
+			tailleMot=mots[i].size();
+		}
+	}
+	return result;
+}
+
 
 int main(int argc, char *argv[]){
 	if(argc<=2){
@@ -191,13 +230,13 @@ int main(int argc, char *argv[]){
 		vector<string> mots;
 		for(int i=1; i<argc; i++){
 			string mot = argv[i];
-			cout<<i<<") "<<mot<<" (Taille : "<<mot.size()<<")"<<endl;
+			cout<<i-1<<") "<<mot<<" (Taille : "<<mot.size()<<")"<<endl;
 			mots.push_back(mot);
 			if(tailleMax<mot.size()){
 				tailleMax=mot.size();
 			}
 		}
-		cout<<"Taille Max : "<<tailleMax<<endl;
+		cout<<"Taille Max : "<<tailleMax<<endl<<endl;
 		
 		// Scores d'alignement
 		int indel = 1;
@@ -216,54 +255,56 @@ int main(int argc, char *argv[]){
 				M.clear();
 			}
 		}
-		//afficherMatriceScore(S,nbMots);
-
-		// Détection du score minimum et des mots associés
-		int x=0;
-		int y=0;
-		int a;
-		int min = tailleMax;
-		minimumMatrice(S,tailleMax,nbMots,min,x,y);
-		//cout<<"Minimum : "<<min<<" ("<<x<<","<<y<<")"<<endl;
-
-		while(min<tailleMax){
-			string mot1modif = "";
-			string mot2modif = "";
-			vector< vector<int> > M((int) mots[x].size()+1, vector<int>((int) mots[y].size()+1));
-			//cout<<"OUI"<<endl;
-			remplissageMatrice(M,mots[x],mots[y],indel,mismatch,match);
-			a = alignement(M,mots[x],mots[y],mot1modif,mot2modif);
-			M.clear();
+		afficherMatriceScore(S,nbMots);
 
 
-			S[x][y]=tailleMax;
-			afficherMatriceScore(S,nbMots);
 
-			if(mots[x].size()<mot1modif.size()){
-				mots[x]=mot1modif;
+		// Détection du mot de score minimum
+		vector<int> Score(nbMots+1);
+		for(int i=0; i<nbMots; i++){
+			for(int j=i+1; j<nbMots; j++){
+				Score[i]+=S[i][j];
+				Score[j]+=S[i][j];
 			}
-			if(mots[y].size()<mot2modif.size()){
-				mots[y]=mot2modif;
-			}
-
-			for(int i=0; i<nbMots; i++){
-				for(int j=i+1; j<nbMots; j++){
-					if(S[i][j]!=tailleMax){
-						string mot1modif = "";
-						string mot2modif = "";
-						vector< vector<int> > M((int) mots[i].size()+1, vector<int>((int) mots[j].size()+1));
-						remplissageMatrice(M,mots[i],mots[j],indel,mismatch,match);
-						S[i][j] = alignement(M,mots[i],mots[j],mot1modif,mot2modif);
-						M.clear();
-					}
-				}
-			}
-
-
-			minimumMatrice(S,tailleMax,nbMots,min,x,y);
-			//cout<<"Minimum : "<<min<<" ("<<x<<","<<y<<")"<<endl;
 		}
 		S.clear();
+
+		cout<<"Tableau des scores : ";
+		affichageTableau(Score,nbMots);
+		int minTableau = minimumTableau(Score,nbMots);
+		cout<<"Valeur minimale du tableau : "<<minTableau<<endl;
+		int plusGrandMotSelonMin = motValMinTableau(Score,nbMots,minTableau,mots);
+		cout<<"Mot choisi : "<<mots[plusGrandMotSelonMin]<<" ("<<plusGrandMotSelonMin<<")"<<endl;
+		//int min = tailleMax;
+		//minimumMatrice(S,tailleMax,nbMots,min,x,y);
+		//cout<<"Minimum : "<<min<<" ("<<x<<","<<y<<")"<<endl;
+
+		bool motChoisiChange=false;
+		int a;
+		for(int j=0; j<nbMots; j++){
+			if(j!=plusGrandMotSelonMin){
+				string mot1modif = "";
+				string mot2modif = "";
+				vector< vector<int> > M((int) mots[plusGrandMotSelonMin].size()+1, vector<int>((int) mots[j].size()+1));
+				remplissageMatrice(M,mots[plusGrandMotSelonMin],mots[j],indel,mismatch,match);
+				a = alignement(M,mots[plusGrandMotSelonMin],mots[j],mot1modif,mot2modif);
+				if(mot1modif.size()>mots[plusGrandMotSelonMin].size()){
+					motChoisiChange=true;
+					mots[plusGrandMotSelonMin]=mot1modif;
+				}
+			}
+		}
+		cout<<"Mot choisi change : "<<motChoisiChange<<endl;
+		for(int j=0; j<nbMots; j++){
+			if(j!=plusGrandMotSelonMin){
+				string mot1modif = "";
+				string mot2modif = "";
+				vector< vector<int> > M((int) mots[plusGrandMotSelonMin].size()+1, vector<int>((int) mots[j].size()+1));
+				remplissageMatrice(M,mots[plusGrandMotSelonMin],mots[j],indel,mismatch,match);
+				a = alignement(M,mots[plusGrandMotSelonMin],mots[j],mot1modif,mot2modif);
+				mots[j] = mot2modif;		
+			}
+		}
 
 		for(int i=0; i<nbMots; i++){
 			int id=0;
@@ -308,10 +349,9 @@ int main(int argc, char *argv[]){
 
 		cout<<endl<<"MOTS ALIGNÉS : "<<endl;
 		for(int i=0; i<nbMots; i++){
-			cout<<i+1<<") "<<mots[i]<<endl;
+			cout<<mots[i]<<endl;
 		}
 		cout<<endl;
-		
 	}
 	
 	return 0;
