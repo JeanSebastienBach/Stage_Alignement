@@ -7,31 +7,38 @@
 #include <time.h>
 
 using namespace std;
+//Explication
 string nucleotideHasard(float matriceProba[]){
-	int p = rand() % 1001;
-	if(p<=matriceProba[0]*1000){
-		return "A";
+	int nbPseudoAleatoire = rand() % 1001;
+	string resultat = "";
+	if(nbPseudoAleatoire<=matriceProba[0]*1000){
+		resultat = "A";
 	}
-	else if(p<=(matriceProba[0]+matriceProba[1])*1000){
-		return "C";
+	else if(nbPseudoAleatoire<=(matriceProba[0]+matriceProba[1])*1000){
+		resultat = "C";
 	}
-	else if(p<=(matriceProba[0]+matriceProba[1]+matriceProba[2])*1000){
-		return "G";
+	else if(nbPseudoAleatoire<=(matriceProba[0]+matriceProba[1]+matriceProba[2])*1000){
+		resultat = "G";
 	}
 	else{
-		return "U";
+		resultat = "T";
 	}
+	return resultat;
 }
-
-void modificationTabProbaNucleotides(vector<string> tabSequence,float tabProbaNucleotides[4][4],unsigned int tabNbNucleotideConsiderer[4]){
+//Renommer variables + vérifier que le code est propre + Explication
+void modificationTabProbaNucleotides(vector<string> tabSequence,float tabProbaNucleotides[4][4],unsigned int tabNbNucleotideConsiderer[4],bool optionM){
 	string sequence = "";
 	char dernierNucleotide;
 	char actuelNucleotide;
-	cout<<"====================================================="<<endl;
-	cout<<"Liste des séquences considérer dans les probabilité : "<<endl;
-	cout<<endl;
+	if (!optionM){
+		cout<<"====================================================="<<endl;
+		cout<<"Liste des séquences considérer dans les probabilité : "<<endl;
+		cout<<endl;
+	}
 	for(int i=0;i<tabSequence.size();i++){
-		cout<<"S["<<i<<"] = "<<tabSequence[i]<<endl;
+		if (!optionM){
+			cout<<"S["<<i<<"] = "<<tabSequence[i]<<endl;
+		}
 		sequence = tabSequence[i];
 		for(int j=1;j<sequence.size();j++){
 			dernierNucleotide = sequence[j-1];
@@ -59,7 +66,7 @@ void modificationTabProbaNucleotides(vector<string> tabSequence,float tabProbaNu
        		 			tabProbaNucleotides[0][3] = ((tabNbNucleotideConsiderer[0]*tabProbaNucleotides[0][3])/(tabNbNucleotideConsiderer[0]+1));
     			        break;
 			
-	    	    	case 'U' :
+	    	    	case 'T' :
 	    		        tabProbaNucleotides[0][0] = ((tabNbNucleotideConsiderer[0]*tabProbaNucleotides[0][0])/(tabNbNucleotideConsiderer[0]+1));
        		 			tabProbaNucleotides[0][1] = ((tabNbNucleotideConsiderer[0]*tabProbaNucleotides[0][1])/(tabNbNucleotideConsiderer[0]+1));
        		 			tabProbaNucleotides[0][2] = ((tabNbNucleotideConsiderer[0]*tabProbaNucleotides[0][2])/(tabNbNucleotideConsiderer[0]+1));
@@ -91,7 +98,7 @@ void modificationTabProbaNucleotides(vector<string> tabSequence,float tabProbaNu
        		 			tabProbaNucleotides[1][3] = ((tabNbNucleotideConsiderer[1]*tabProbaNucleotides[1][3])/(tabNbNucleotideConsiderer[1]+1));
     			        break;
 			
-	    	    	case 'U' :
+	    	    	case 'T' :
 	    		        tabProbaNucleotides[1][0] = ((tabNbNucleotideConsiderer[1]*tabProbaNucleotides[1][0])/(tabNbNucleotideConsiderer[1]+1));
        		 			tabProbaNucleotides[1][1] = ((tabNbNucleotideConsiderer[1]*tabProbaNucleotides[1][1])/(tabNbNucleotideConsiderer[1]+1));
        		 			tabProbaNucleotides[1][2] = ((tabNbNucleotideConsiderer[1]*tabProbaNucleotides[1][2])/(tabNbNucleotideConsiderer[1]+1));
@@ -123,7 +130,7 @@ void modificationTabProbaNucleotides(vector<string> tabSequence,float tabProbaNu
        		 			tabProbaNucleotides[2][3] = ((tabNbNucleotideConsiderer[2]*tabProbaNucleotides[2][3])/(tabNbNucleotideConsiderer[2]+1));
     			        break;
 			
-	    	    	case 'U' :
+	    	    	case 'T' :
 	    		        tabProbaNucleotides[2][0] = ((tabNbNucleotideConsiderer[2]*tabProbaNucleotides[2][0])/(tabNbNucleotideConsiderer[2]+1));
        		 			tabProbaNucleotides[2][1] = ((tabNbNucleotideConsiderer[2]*tabProbaNucleotides[2][1])/(tabNbNucleotideConsiderer[2]+1));
        		 			tabProbaNucleotides[2][2] = ((tabNbNucleotideConsiderer[2]*tabProbaNucleotides[2][2])/(tabNbNucleotideConsiderer[2]+1));
@@ -132,7 +139,7 @@ void modificationTabProbaNucleotides(vector<string> tabSequence,float tabProbaNu
 				}
 				tabNbNucleotideConsiderer[2]++;
 			}
-			else if(dernierNucleotide=='U'){
+			else if(dernierNucleotide=='T'){
 				switch(actuelNucleotide){
        		 		case 'A' :
        		 			tabProbaNucleotides[3][0] = (((tabNbNucleotideConsiderer[3]*tabProbaNucleotides[3][0])+1)/(tabNbNucleotideConsiderer[3]+1));
@@ -155,7 +162,7 @@ void modificationTabProbaNucleotides(vector<string> tabSequence,float tabProbaNu
        		 			tabProbaNucleotides[3][3] = ((tabNbNucleotideConsiderer[3]*tabProbaNucleotides[3][3])/(tabNbNucleotideConsiderer[3]+1));
     			        break;
 			
-	    	    	case 'U' :
+	    	    	case 'T' :
 	    		        tabProbaNucleotides[3][0] = ((tabNbNucleotideConsiderer[3]*tabProbaNucleotides[3][0])/(tabNbNucleotideConsiderer[3]+1));
        		 			tabProbaNucleotides[3][1] = ((tabNbNucleotideConsiderer[3]*tabProbaNucleotides[3][1])/(tabNbNucleotideConsiderer[3]+1));
        		 			tabProbaNucleotides[3][2] = ((tabNbNucleotideConsiderer[3]*tabProbaNucleotides[3][2])/(tabNbNucleotideConsiderer[3]+1));
@@ -166,9 +173,11 @@ void modificationTabProbaNucleotides(vector<string> tabSequence,float tabProbaNu
 			}
 		}
 	}
-	cout<<"====================================================="<<endl;
+	if (!optionM){
+		cout<<"====================================================="<<endl;
+	}
 } 
-
+//Explication
 string generation(int tailleSequenceAGenerer,float tabProbaNucleotides[4][4]){
 	string sequence = "";
 	int indice=0;
@@ -192,7 +201,7 @@ string generation(int tailleSequenceAGenerer,float tabProbaNucleotides[4][4]){
 		else if(dernierNucleotide=='G'){
 			sequence += nucleotideHasard(tabProbaNucleotides[2]);
 		}
-		else if(dernierNucleotide=='U'){
+		else if(dernierNucleotide=='T'){
 			sequence += nucleotideHasard(tabProbaNucleotides[3]);
 		}
 		indice++;
@@ -212,7 +221,7 @@ string duplicationNucleotide(string sequence,int position){
 	resultat += sequence.substr(position,sequence.size());
 	return resultat;
 }
-
+//Renommer variables + vérifier que le code est propre + Explication
 vector<string> generationMutation(string s,int nbSeq){
 	vector<string> res;
 	res.push_back(s);
@@ -253,7 +262,7 @@ vector<string> generationMutation(string s,int nbSeq){
 						}else if(ancienNucleotide=='G'){
 							mutationSequence[2]=0.000;
 							nouveauNucleotide = nucleotideHasard(mutationSequence);
-						}else if(ancienNucleotide=='U'){
+						}else if(ancienNucleotide=='T'){
 							mutationSequence[3]=0.000;
 							nouveauNucleotide = nucleotideHasard(mutationSequence);
 						}
@@ -272,66 +281,166 @@ vector<string> generationMutation(string s,int nbSeq){
 	
 	return res;
 }
+void affichageArguments(){
+	cout<<"La génération comporte deux modes :"<<endl;
+	cout<<endl;
+	cout<<"-----------------------------------------------------------------"<<endl;
+	cout<<"Mode 0 : génération d'une séquence de taille <taille_des_séquences_à_générer> par un HMM et de <nombre_de_séquences_à_générer> mutations de cette séquence."<<endl;
+	cout<<"Le mode permet d'écrire dans un fichier <*nom_du_fichier_résultat> l'ensemble des mutations générées."<<endl;
+	cout<<"Il permet également de recalculer les probabilités du HMM depuis un fichier <*nom_du_fichier_paramétrage_HMM>(attention il faut également un <*nom_du_fichier_résultat> pour ce faire)"<<endl;
+	cout<<endl;
+	cout<<"Pour utilisé ce mode veuillez entré la commande suivante (les arguments comportant une * sont facultatifs):"<<endl;
+	cout<<"./generation 0 <taille_des_séquences_à_générer> <nombre_de_séquences_à_générer> <*nom_du_fichier_résultat> <*nom_du_fichier_paramétrage_HMM>"<<endl;
+	cout<<"-----------------------------------------------------------------"<<endl;
+	cout<<endl;
+	cout<<"Mode 1 : une séquence de taille <taille_des_séquences_à_générer> vous sera demandé par la suite afin de générer les <nombre_de_séquences_à_générer> mutations de cette séquence."<<endl;
+	cout<<"Le mode permet d'écrire dans un fichier <*nom_du_fichier_résultat> l'ensemble des mutations générées."<<endl;
+	cout<<"Il permet également de lire la séquence à faire muter depuis un fichier <*nom_du_fichier_sequence>(attention il faut également un <*nom_du_fichier_résultat> pour ce faire)"<<endl;
+	cout<<endl;
+	cout<<"Pour utilisé ce mode veuillez entré la commande suivante (les arguments comportant une * sont facultatifs):"<<endl;
+	cout<<"./generation 1 <taille_des_séquences_à_générer> <nombre_de_séquences_à_générer> <*nom_du_fichier_résultat> <*nom_du_fichier_sequence>"<<endl;
+	cout<<"-----------------------------------------------------------------"<<endl;
+	cout<<endl;
+	cout<<"Attention les séquences considérées ne doivent contenir que les caractères A, C, G ou U !"<<endl;
+	cout<<"Pour n'afficher que les mutations générées en les séparant par un espace il faut ajouter un -m en argument."<<endl;
+	cout<<"Pour revoir ces informations ajouter un -help ou -h en argument."<<endl;
+}
 
 int main(int argc, char** argv,char** env){
-	if(argc<4){
-		cout<<"La génération comporte deux mode :"<<endl;
-		cout<<"Mode 0 : génération "<<endl;nécessite <mode> <taille_des_séquences_à_générer> <nombre_de_séquences_à_générer> "<<endl;
-	}else {
+	unsigned int nbOption = 0;
+	int premiereOption = -1;
+	unsigned int indice = 0;
+	bool optionM = false;
+	bool optionH = false;
+	string option = "";
+	while(indice < argc){	
+		if((std::string(argv[indice])=="-m")||(std::string(argv[indice])=="-h")||(std::string(argv[indice])=="-help")){
+			nbOption++;
+			if (premiereOption == -1){
+				premiereOption = indice;
+			}
+			if (std::string(argv[indice])=="-m"){
+				optionM = true;
+			}else{
+				optionH = true;
+			}
+		}
+		indice++;
+	}
+	if((argc<2)||(optionH)||(premiereOption < argc-nbOption)){
+		affichageArguments();
+	}else if (((stoi(argv[1])==1)||(stoi(argv[1])==0))&&((argc-nbOption)>3)){
 		srand(time(NULL));
 		string sequence ="";
+		
 		int tailleSeq = stoi(argv[2]);
 		int nbSeq = stoi(argv[3]);
-		int mode = stoi(argv[1]);
-		if (mode==1){
-			while(sequence.size()!=tailleSeq){
-				
-				cout<<"Veuillez saisir une séquence de taille "<<tailleSeq<<" : ";
-				cin>>sequence;
+		
+		if (stoi(argv[1])==1){
+			if((argc-nbOption)==6){
+				string nomFichierSeq = argv[5];
+				//A FAIRE
+				//lire dans le fichier la séquence;
+			}else {
+				while(sequence.size()!=tailleSeq){
+					cout<<"Veuillez saisir une séquence de taille "<<tailleSeq<<" : ";
+					cin>>sequence;
+				}
 			}
 		}else {
 			vector<string> tabSequence;
-			tabSequence.push_back("ACGGUGACACUAACGCGAUGGCUAGCAGCUAGUCAUCGACCCAGUACGCAUG");
-			tabSequence.push_back("CAUGACCCGUGCAGCUAGCUACGAAAACUCGAUGAUCGUGCAUCAUGUCAGUCAGUG");
 			unsigned int tabNbNucleotideConsiderer[4];
 			float tabProbaNucleotides[4][4];
-			for (int k=0;k<4;k++){
-				tabProbaNucleotides[k][0]=0.0;
-				tabProbaNucleotides[k][1]=0.0;
-				tabProbaNucleotides[k][2]=0.0;
-				tabProbaNucleotides[k][3]=0.0;
-				tabNbNucleotideConsiderer[k]=0;
+			
+			if((argc-nbOption)==6){
+				string nomFichierDesSequences = argv[5];
+				//A FAIRE
+				//lire dans le fichier les séquences pour le tabSequence;
+				for (int k=0;k<4;k++){
+					tabProbaNucleotides[k][0]=0.0;
+					tabProbaNucleotides[k][1]=0.0;
+					tabProbaNucleotides[k][2]=0.0;
+					tabProbaNucleotides[k][3]=0.0;
+					tabNbNucleotideConsiderer[k]=0;
+				}	
+				modificationTabProbaNucleotides(tabSequence,tabProbaNucleotides,tabNbNucleotideConsiderer,optionM);
+			}else {
+				tabProbaNucleotides[0][0]=0.0;
+				tabProbaNucleotides[0][1]=0.0;
+				tabProbaNucleotides[0][2]=0.0;
+				tabProbaNucleotides[0][3]=0.0;
+				tabNbNucleotideConsiderer[0]=0;	
+								
+				tabProbaNucleotides[1][0]=0.0;
+				tabProbaNucleotides[1][1]=0.0;
+				tabProbaNucleotides[1][2]=0.0;
+				tabProbaNucleotides[1][3]=0.0;
+				tabNbNucleotideConsiderer[1]=0;
+									
+				tabProbaNucleotides[2][0]=0.0;
+				tabProbaNucleotides[2][1]=0.0;
+				tabProbaNucleotides[2][2]=0.0;
+				tabProbaNucleotides[2][3]=0.0;
+				tabNbNucleotideConsiderer[2]=0;
+				
+				tabProbaNucleotides[3][0]=0.0;
+				tabProbaNucleotides[3][1]=0.0;
+				tabProbaNucleotides[3][2]=0.0;
+				tabProbaNucleotides[3][3]=0.0;
+				tabNbNucleotideConsiderer[3]=0;
 			}
-			modificationTabProbaNucleotides(tabSequence,tabProbaNucleotides,tabNbNucleotideConsiderer);
-			cout<<"Liste des probabilité d'apparition de chaque nucléotide du nombre de nucléotides considérés : "<<endl;
-			cout<<endl;
-			for(int i=0;i<4;i++){
-				cout<<"Probabilité d'apparition aprés le nucléotide "<< ((i==0) ? "A" : ((i==1) ? "C" : ((i==2) ? "G" : "U"))) <<endl;
-				cout<<"A = "<<tabProbaNucleotides[i][0]<<endl;
-				cout<<"C = "<<tabProbaNucleotides[i][1]<<endl;
-				cout<<"G = "<<tabProbaNucleotides[i][2]<<endl;
-				cout<<"U = "<<tabProbaNucleotides[i][3]<<endl;
-			}
-			cout<<"Nucleotides considérés aprés un : "<<endl;
-			cout<<"A = "<<tabNbNucleotideConsiderer[0]<<endl;
-			cout<<"C = "<<tabNbNucleotideConsiderer[1]<<endl;
-			cout<<"G = "<<tabNbNucleotideConsiderer[2]<<endl;
-			cout<<"U = "<<tabNbNucleotideConsiderer[3]<<endl;
-			cout<<"====================================================="<<endl;
-			cout<<"Génération de la séquence de taille "<<tailleSeq<<" : "<<endl;
-			cout<<endl;
 			sequence = generation(tailleSeq,tabProbaNucleotides);
-			cout<<sequence<<endl;
-			cout<<"====================================================="<<endl;
+			if(!optionM){
+				cout<<"Liste des probabilité d'apparition de chaque nucléotide du nombre de nucléotides considérés : "<<endl;
+				cout<<endl;
+				for(int i=0;i<4;i++){
+					cout<<"Probabilité d'apparition aprés le nucléotide "<< ((i==0) ? "A" : ((i==1) ? "C" : ((i==2) ? "G" : "T"))) <<endl;
+					cout<<"A = "<<tabProbaNucleotides[i][0]<<endl;
+					cout<<"C = "<<tabProbaNucleotides[i][1]<<endl;
+					cout<<"G = "<<tabProbaNucleotides[i][2]<<endl;
+					cout<<"T = "<<tabProbaNucleotides[i][3]<<endl;
+				}
+				cout<<"Nucleotides considérés aprés un : "<<endl;
+				cout<<"A = "<<tabNbNucleotideConsiderer[0]<<endl;
+				cout<<"C = "<<tabNbNucleotideConsiderer[1]<<endl;
+				cout<<"G = "<<tabNbNucleotideConsiderer[2]<<endl;
+				cout<<"T = "<<tabNbNucleotideConsiderer[3]<<endl;
+				cout<<"====================================================="<<endl;
+				cout<<"Génération de la séquence de taille "<<tailleSeq<<" : "<<endl;
+				cout<<endl;
+				cout<<sequence<<endl;
+				cout<<"====================================================="<<endl;
+			}
 		}
 		vector<string> ensembleSeq = generationMutation(sequence,nbSeq);
-		cout<<"Liste des mutation générer : "<<endl;
-		cout<<endl;
-		for(int i=0;i<ensembleSeq.size();i++){
-			cout<<"S["<<i<<"]="<<ensembleSeq[i]<<endl;
+		if(optionM){
+			for(int i=0;i<ensembleSeq.size();i++){
+				if (i==0){
+					cout<<ensembleSeq[i];
+				}else{
+					cout<<" "<<ensembleSeq[i];
+				}
+			}	
+			cout<<endl;
+		}else {
+			if (stoi(argv[1])==1){
+				cout<<"====================================================="<<endl;
+			}
+			cout<<"Liste des mutation générer : "<<endl;
+			cout<<endl;
+			for(int i=0;i<ensembleSeq.size();i++){
+				cout<<"S["<<i<<"]="<<ensembleSeq[i]<<endl;
+			}
+			cout<<"====================================================="<<endl;
 		}
-		cout<<"====================================================="<<endl;
-	}
-	
+					
+		if((argc-nbOption)>=5){
+				string nomFichierResultats = argv[4];
+				//A FAIRE
+				//écrire dans le fichier les séquences générées;
+		}
+	}else{
+		affichageArguments();
+	}		
 	return 0;
 }
