@@ -1,10 +1,11 @@
 #include <iostream>
-#include <vector>
-#include <string>
-#include <iomanip>
-#include <cmath>
+#include <fstream>
 #include <stdlib.h>
+#include <string>
+#include <vector>
+#include <cmath>
 #include <time.h>
+#include <iomanip>
 
 using namespace std;
 //Explication
@@ -356,6 +357,28 @@ int main(int argc, char** argv,char** env){
 				string nomFichierDesSequences = argv[5];
 				//A FAIRE
 				//lire dans le fichier les séquences pour le tabSequence;
+				ifstream fichier(nomFichierDesSequences);
+   				if(fichier){
+      				string ligne; 
+					string resultat=""; 
+      				while(getline(fichier, ligne)){ 
+        				for(int i=0;i<ligne.size();i++){
+        					if ((ligne[i]=='a')||(ligne[i]=='A')){
+								resultat+='A';
+							}else if ((ligne[i]=='c')||(ligne[i]=='C')){
+								resultat+='C';
+							}else if ((ligne[i]=='g')||(ligne[i]=='G')){
+								resultat+='G';
+							}else if ((ligne[i]=='t')||(ligne[i]=='T')){
+								resultat+='T';
+							}
+        				}
+      				}
+      				tabSequence.push_back(resultat);
+   				}else{
+      				cout << "ERREUR: Impossible d'ouvrir le fichier de lecture des séquences." << endl;
+   				}
+   				
 				for (int k=0;k<4;k++){
 					tabProbaNucleotides[k][0]=0.0;
 					tabProbaNucleotides[k][1]=0.0;
@@ -365,29 +388,29 @@ int main(int argc, char** argv,char** env){
 				}	
 				modificationTabProbaNucleotides(tabSequence,tabProbaNucleotides,tabNbNucleotideConsiderer,optionM);
 			}else {
-				tabProbaNucleotides[0][0]=0.0;
-				tabProbaNucleotides[0][1]=0.0;
-				tabProbaNucleotides[0][2]=0.0;
-				tabProbaNucleotides[0][3]=0.0;
-				tabNbNucleotideConsiderer[0]=0;	
+				tabProbaNucleotides[0][0]=0.32168;
+				tabProbaNucleotides[0][1]=0.225958;
+				tabProbaNucleotides[0][2]=0.194572;
+				tabProbaNucleotides[0][3]=0.25779;
+				tabNbNucleotideConsiderer[0]=8953;	
 								
-				tabProbaNucleotides[1][0]=0.0;
-				tabProbaNucleotides[1][1]=0.0;
-				tabProbaNucleotides[1][2]=0.0;
-				tabProbaNucleotides[1][3]=0.0;
-				tabNbNucleotideConsiderer[1]=0;
+				tabProbaNucleotides[1][0]=0.379461;
+				tabProbaNucleotides[1][1]=0.16169;
+				tabProbaNucleotides[1][2]=0.0799346;
+				tabProbaNucleotides[1][3]=0.378915;
+				tabNbNucleotideConsiderer[1]=5492;
 									
-				tabProbaNucleotides[2][0]=0.0;
-				tabProbaNucleotides[2][1]=0.0;
-				tabProbaNucleotides[2][2]=0.0;
-				tabProbaNucleotides[2][3]=0.0;
-				tabNbNucleotideConsiderer[2]=0;
+				tabProbaNucleotides[2][0]=0.274944;
+				tabProbaNucleotides[2][1]=0.199215;
+				tabProbaNucleotides[2][2]=0.186424;
+				tabProbaNucleotides[2][3]=0.339417;
+				tabNbNucleotideConsiderer[2]=5863;
 				
-				tabProbaNucleotides[3][0]=0.0;
-				tabProbaNucleotides[3][1]=0.0;
-				tabProbaNucleotides[3][2]=0.0;
-				tabProbaNucleotides[3][3]=0.0;
-				tabNbNucleotideConsiderer[3]=0;
+				tabProbaNucleotides[3][0]=0.247759;
+				tabProbaNucleotides[3][1]=0.14728;
+				tabProbaNucleotides[3][2]=0.269856;
+				tabProbaNucleotides[3][3]=0.335105;
+				tabNbNucleotideConsiderer[3]=9594;
 			}
 			sequence = generation(tailleSeq,tabProbaNucleotides);
 			if(!optionM){
