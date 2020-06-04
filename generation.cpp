@@ -340,8 +340,27 @@ int main(int argc, char** argv,char** env){
 		if (stoi(argv[1])==1){
 			if((argc-nbOption)==6){
 				string nomFichierSeq = argv[5];
-				//A FAIRE
-				//lire dans le fichier la séquence;
+				ifstream fichierSeq(nomFichierSeq);
+   				if(fichierSeq){
+      				string sequenceBrut = ""; 
+					getline(fichierSeq, sequenceBrut); 
+					int indice = 0;
+        			while((indice<sequenceBrut.size())&&(sequence.size()<tailleSeq)){
+        				if ((sequenceBrut[indice]=='a')||(sequenceBrut[indice]=='A')){
+							sequence+='A';
+						}else if ((sequenceBrut[indice]=='c')||(sequenceBrut[indice]=='C')){
+							sequence+='C';
+						}else if ((sequenceBrut[indice]=='g')||(sequenceBrut[indice]=='G')){
+							sequence+='G';
+						}else if ((sequenceBrut[indice]=='t')||(sequenceBrut[indice]=='T')){
+							sequence+='T';
+						}
+						indice++;
+      				}
+      				
+   				}else{
+      				cout << "ERREUR: Impossible d'ouvrir le fichier de lecture des séquences." << endl;
+   				}
 			}else {
 				while(sequence.size()!=tailleSeq){
 					cout<<"Veuillez saisir une séquence de taille "<<tailleSeq<<" : ";
@@ -355,13 +374,11 @@ int main(int argc, char** argv,char** env){
 			
 			if((argc-nbOption)==6){
 				string nomFichierDesSequences = argv[5];
-				//A FAIRE
-				//lire dans le fichier les séquences pour le tabSequence;
-				ifstream fichier(nomFichierDesSequences);
-   				if(fichier){
+				ifstream fichierDesSeq(nomFichierDesSequences);
+   				if(fichierDesSeq){
       				string ligne; 
 					string resultat=""; 
-      				while(getline(fichier, ligne)){ 
+      				while(getline(fichierDesSeq, ligne)){ 
         				for(int i=0;i<ligne.size();i++){
         					if ((ligne[i]=='a')||(ligne[i]=='A')){
 								resultat+='A';
@@ -458,9 +475,30 @@ int main(int argc, char** argv,char** env){
 		}
 					
 		if((argc-nbOption)>=5){
-				string nomFichierResultats = argv[4];
-				//A FAIRE
-				//écrire dans le fichier les séquences générées;
+			string nomFichierResultats = argv[4];
+   			ofstream fichierSauvegarde(nomFichierResultats);
+    		if(fichierSauvegarde){
+    			if(optionM){
+					for(int i=0;i<ensembleSeq.size();i++){
+						if (i==0){
+							fichierSauvegarde<<ensembleSeq[i];
+						}else{
+							fichierSauvegarde<<" "<<ensembleSeq[i];
+						}
+					}	
+					fichierSauvegarde<<endl;
+				}else {
+					fichierSauvegarde<<"====================================================="<<endl;
+					fichierSauvegarde<<"Liste des mutation générer : "<<endl;
+					fichierSauvegarde<<endl;
+					for(int i=0;i<ensembleSeq.size();i++){
+						fichierSauvegarde<<"S["<<i<<"]="<<ensembleSeq[i]<<endl;
+					}
+					fichierSauvegarde<<"====================================================="<<endl;
+				}
+        	}else{
+        		cout << "ERREUR: Impossible d'ouvrir le fichier pour l'écriture du résultat." << endl;
+    		}
 		}
 	}else{
 		affichageArguments();
