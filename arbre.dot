@@ -1,0 +1,3 @@
+digraph A {
+"-A-CTG-" -> "-A-CTT-" [label=" 3"];
+}

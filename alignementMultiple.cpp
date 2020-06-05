@@ -9,6 +9,7 @@ Alignement multiple
 */
 
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <string>
 #include <iomanip>
@@ -203,6 +204,18 @@ int minimumTableau(vector<int> T, int taille){
 	return min;
 }
 
+int idMinimumTableau(vector<int> T, int taille){
+	int min = T[0];
+	int idMin = 0;
+	for(int i=1; i<taille; i++){
+		if(T[i]<min){
+			min=T[i];
+			idMin=i;
+		}
+	}
+	return idMin;
+}
+
 // Mot avec la valeur minimale dont la taille est la plus grande
 int motValMinTableau(vector<int> T, int taille, int min, vector<string> mots){
 	int result=0;
@@ -214,6 +227,11 @@ int motValMinTableau(vector<int> T, int taille, int min, vector<string> mots){
 		}
 	}
 	return result;
+}
+
+// Tracer une branche de l'arbre
+string branche(string A, string B, int score){
+	return "\"" + A + "\" -> \"" + B + "\" [label=\" " + to_string(score) + "\"];";
 }
 
 
@@ -352,6 +370,52 @@ int main(int argc, char *argv[]){
 			cout<<mots[i]<<endl;
 		}
 		cout<<endl;
+
+
+		// Matrice de scores finale
+		vector< vector<int> > ScoreFinal(nbMots+1, vector<int>(nbMots+1));
+		for(int i=0; i<nbMots; i++){
+			for(int j=i+1; j<nbMots; j++){
+				string mot1modif = "";
+				string mot2modif = "";
+				vector< vector<int> > M((int) mots[i].size()+1, vector<int>((int) mots[j].size()+1));
+				remplissageMatrice(M,mots[i],mots[j],indel,mismatch,match);
+				ScoreFinal[i][j] = alignement(M,mots[i],mots[j],mot1modif,mot2modif);
+				M.clear();
+			}
+		}
+		afficherMatriceScore(ScoreFinal,nbMots);
+
+		vector<int> SommeScore(nbMots+1);
+		for(int i=0; i<nbMots; i++){
+			for(int j=i+1; j<nbMots; j++){
+				SommeScore[i]+=ScoreFinal[i][j];
+				SommeScore[j]+=ScoreFinal[i][j];
+			}
+		}
+
+		cout<<"Tableau des scores : ";
+		affichageTableau(SommeScore,nbMots);
+		int idMinTableau = idMinimumTableau(SommeScore,nbMots);
+		cout<<idMinTableau<<endl;
+
+		int x,y;
+		int min = tailleMax;
+		minimumMatrice(ScoreFinal,tailleMax,nbMots,min,x,y);
+
+		// Arbre
+		string const nomFichier("arbre.dot");
+    	ofstream monFlux(nomFichier.c_str());
+
+    	if(monFlux){
+	        monFlux << "digraph A {" << endl;
+	        monFlux << branche(mots[0],mots[1],3) << endl;
+	        monFlux << "}" << endl;
+	    }
+	    else{
+	        cout << "ERREUR : Impossible d'ouvrir le fichier." << endl;
+	    }
+
 	}
 	
 	return 0;
