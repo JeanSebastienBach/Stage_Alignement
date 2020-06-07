@@ -489,12 +489,13 @@ int main(int argc, char** argv,char** env){
 					fichierSauvegarde<<endl;
 				}else {
 					fichierSauvegarde<<"====================================================="<<endl;
-					fichierSauvegarde<<"Liste des mutation générer : "<<endl;
+					fichierSauvegarde<<"Liste des mutation générées : "<<endl;
 					fichierSauvegarde<<endl;
 					for(int i=0;i<ensembleSeq.size();i++){
-						fichierSauvegarde<<"S["<<i<<"]="<<ensembleSeq[i]<<endl;
+						//fichierSauvegarde<<"S["<<i<<"]="<<ensembleSeq[i]<<endl;
+						fichierSauvegarde<<ensembleSeq[i]<<" ";
 					}
-					fichierSauvegarde<<"====================================================="<<endl;
+					fichierSauvegarde<<endl<<"====================================================="<<endl;
 				}
         	}else{
         		cout << "ERREUR: Impossible d'ouvrir le fichier pour l'écriture du résultat." << endl;

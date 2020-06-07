@@ -394,10 +394,10 @@ int main(int argc, char *argv[]){
 			}
 		}
 
-		cout<<"Tableau des scores : ";
-		affichageTableau(SommeScore,nbMots);
-		int idMinTableau = idMinimumTableau(SommeScore,nbMots);
-		cout<<idMinTableau<<endl;
+		//cout<<"Tableau des scores : ";
+		//affichageTableau(SommeScore,nbMots);
+		//int idMinTableau = idMinimumTableau(SommeScore,nbMots);
+		//cout<<idMinTableau<<endl;
 
 		int x,y;
 		int min = tailleMax;
@@ -409,7 +409,13 @@ int main(int argc, char *argv[]){
 
     	if(monFlux){
 	        monFlux << "digraph A {" << endl;
-	        monFlux << branche(mots[0],mots[1],3) << endl;
+	        while(min!=tailleMax){
+	        	monFlux << branche(mots[x],mots[y],min) << endl;
+	        	for(int i=0; i<y; i++){
+	        		ScoreFinal[i][y]=tailleMax;
+	        	}
+	        	minimumMatrice(ScoreFinal,tailleMax,nbMots,min,x,y);
+	        }
 	        monFlux << "}" << endl;
 	    }
 	    else{
