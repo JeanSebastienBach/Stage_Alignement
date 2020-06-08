@@ -492,8 +492,7 @@ int main(int argc, char** argv,char** env){
 					fichierSauvegarde<<"Liste des mutation générées : "<<endl;
 					fichierSauvegarde<<endl;
 					for(int i=0;i<ensembleSeq.size();i++){
-						//fichierSauvegarde<<"S["<<i<<"]="<<ensembleSeq[i]<<endl;
-						fichierSauvegarde<<ensembleSeq[i]<<" ";
+						fichierSauvegarde<<"S["<<i<<"]="<<ensembleSeq[i]<<endl;
 					}
 					fichierSauvegarde<<endl<<"====================================================="<<endl;
 				}
