@@ -6,17 +6,8 @@
 #include <cmath>
 #include <time.h>
 #include <iomanip>
-#include <chrono>
 
 using namespace std;
-
-string getTimeStr(){
-    std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-
-    std::string s(30, '\0');
-    std::strftime(&s[0], s.size(), "%Y-%m-%d_%H:%M:%S", std::localtime(&now));
-    return s;
-}
 
 //Explication
 string nucleotideHasard(float matriceProba[]){
@@ -234,6 +225,7 @@ string duplicationNucleotide(string sequence,int position){
 }
 //Renommer variables + vérifier que le code est propre + Explication
 vector<string> generationMutation(string s,int nbSeq, string nomFichierArbreMutation){
+
 	vector<string> res;
 	res.push_back(s);
 	
@@ -245,11 +237,10 @@ vector<string> generationMutation(string s,int nbSeq, string nomFichierArbreMuta
 	int x = 0;
 	int nbModifNucleotide = 0;
 	char ancienNucleotide;
-	string nouvelleSeq="";
-	string nouveauNucleotide="";
-	string typeMutation = "";
-	string arbreMutation = "";
-	
+	string nouvelleSeq = "";
+	string nouveauNucleotide = "";
+	string arbreMutation = "digraph Mutation { \n"; 
+
     int i = 0;		
 	while (res.size()<nbSeq){
 		i = 0;
@@ -263,16 +254,10 @@ vector<string> generationMutation(string s,int nbSeq, string nomFichierArbreMuta
 					float mutationSequence[4] = {0.3333,0.3333,0.3333,0.3333};
 					if(valeurGenerer <= probaDuplicationNucleotide*1000){
 						nouvelleSeq = duplicationNucleotide(nouvelleSeq,j); 
-						typeMutation += " Duplication "; 
-						typeMutation += to_string(j); 
 					}else if(valeurGenerer <= (probaDuplicationNucleotide + probaSuppressionNucleotide)*1000){
 						nouvelleSeq = suppressionNucleotide(nouvelleSeq,j);
-						typeMutation += " Suppression ";
-						typeMutation += to_string(j);  
 					}else {
 						ancienNucleotide = nouvelleSeq[j];
-						typeMutation += " Mutation "; 
-						typeMutation += to_string(j); 
 						if(ancienNucleotide=='A'){
 							mutationSequence[0]=0.000;
 							nouveauNucleotide = nucleotideHasard(mutationSequence);
@@ -292,28 +277,28 @@ vector<string> generationMutation(string s,int nbSeq, string nomFichierArbreMuta
 				}
 			}
 			if(nbModifNucleotide > 0){
-				nbModifNucleotide = 0;
 				res.push_back(nouvelleSeq);
 				if (nomFichierArbreMutation != ""){
-					arbreMutation += to_string(i);
-					arbreMutation += typeMutation;
-					arbreMutation += "\n";
+					arbreMutation += "\"" + res[i] + "\" -> \"" + nouvelleSeq + "\" [label=\" " + to_string(nbModifNucleotide) + "\"];\n";
 				}
+				nbModifNucleotide = 0;
 			}
 			
 			i++;
-			typeMutation = "";
 		}
 	}
+	
 	
 	if (nomFichierArbreMutation != ""){
 		ofstream fichierArbre(nomFichierArbreMutation);
 		if(fichierArbre){
 			fichierArbre<<arbreMutation;
+			fichierArbre<<"}"<<endl;
 		}else{
 			cout<<"ERREUR: Impossible d'ouvrir le fichier pour écrire l'arbre des mutations."<<endl;
 		}
 	}
+
 	return res;
 }
 
@@ -366,7 +351,7 @@ int main(int argc, char** argv,char** env){
 	bool optionF = false;	//filtrer l'affichage de sortie
 	bool optionH = false;	//affichage de l'aide
 	//A FAIRE |--------------
-	bool optionM = false;	//affichage de l'aide
+	bool optionM = false;	//utilisation du parallélisme
 	//A FAIRE |--------------
 	int optionL = -1;	//longueur de la séquence
 	int optionN = -1;	//nombre de séquence
@@ -551,21 +536,18 @@ int main(int argc, char** argv,char** env){
 			}
 		}
 		string nomFichierMutation = "";
-		if (optionOm){
-			cout<<"===================="<<endl;
+
+		if (optionOm != -1){
 			int indiceVetification = 0;
 			string verification = argv[optionOm];
 			while ((indiceVetification < verification.size())&&(verification[indiceVetification]!='.')){
 				indiceVetification++;
 			}
 			nomFichierMutation = verification.substr(0,indiceVetification);
-			nomFichierMutation += "_";
-			nomFichierMutation += getTimeStr();
-			nomFichierMutation += ".am";
-			cout<<nomFichierMutation<<endl;
-			cout<<"===================="<<endl;
+			nomFichierMutation += ".dot";
 			
 		}
+
 		vector<string> ensembleSeq = generationMutation(sequence,nbSeq,nomFichierMutation);
 		if(optionF){
 			for(int i=0;i<ensembleSeq.size();i++){

@@ -234,26 +234,125 @@ string branche(string A, string B, int score){
 	return "\"" + A + "\" -> \"" + B + "\" [label=\" " + to_string(score) + "\"];";
 }
 
+void affichageArguments(){
+	
+	cout<<endl;
+	cout<<endl;
+	cout<<"alignementMultiple()		Manuel d'utilisation		alignementMultiple()"<<endl;
+	cout<<endl;
+	cout<<endl;
+	cout<<"La fonction alignementMultiple() permet d'aligner une serie de séquence afin de minimiser le score d'alignement global."<<endl;
+	cout<<"Un arbre de mutation par comparaison des scores d'alignement est également crée."<<endl;
+	cout<<endl;
+	cout<<"Options unaires : "<<endl;
+	cout<<endl;
+	cout<<endl;
+	cout<<"	-h/-help 	permet d'afficher le manuel d'utilisation."<<endl;
+	cout<<endl;
+	cout<<endl;
+	cout<<"Options binaires : "<<endl;
+	cout<<endl;
+	cout<<endl;
+	cout<<"	-is <valeur> 	permet de donner le nom d'un fichier, au format fasta, contenant des séquences de nucléotide à aligner."<<endl;
+	cout<<endl;
+	cout<<endl;
+}
+
 
 int main(int argc, char *argv[]){
-	if(argc<=2){
-		cout<<"Il faut 2 mots ou plus à aligner."<<endl;
+	
+	bool erreurOption = false;	//une erreur dans la saisie des commandes
+	bool optionH = false;	//affichage de l'aide
+	int optionIs = -1;	//fichier contenant l'arbre des mutations.
+	
+	unsigned int indice = 0;
+	
+	string option = "";
+	while((indice < argc)&&(!erreurOption)){	
+		option = std::string(argv[indice]);
+		if(option[0] == '-'){
+			if ((option == "-h")||(option == "-help")||(option == "-H")){
+				optionH = true;
+			}else{
+				
+				if(((indice+1) < argc)&&(std::string(argv[indice+1])[0] != '-')){
+					if((option == "-is")||(option == "-iS")||(option == "-IS")||(option == "-Is")){
+						optionIs = indice+1;
+					}else {
+						cout<<"Il y a une erreur dans les options veuillez respecter la syntaxe si dessous : "<<endl;
+						erreurOption = true;
+					}
+				}else{
+					string reponse = "";
+					cout<<"Il y a une erreur dans les options, l'option "<<argv[indice]<<" n'a pas été pris en compte."<<endl;
+					cout<<"Voulez vous poursuivre l'exécution sans cette option, veuillez saisir oui ou non :";
+					cin>>reponse;
+					if (reponse != "oui"){
+						erreurOption = true;
+					}
+				}
+			}
+		}
+		indice++;
 	}
-	else{
-		
+	if((erreurOption)||(optionH)){
+		affichageArguments();
+	}else {
 		// Affichage des mots
-		int nbMots = argc-1;
+		int nbMots = 0;
 		int tailleMax = 0;
 		cout<<nbMots<<" MOTS À ALIGNER : "<<endl;
 		vector<string> mots;
-		for(int i=1; i<argc; i++){
-			string mot = argv[i];
-			cout<<i-1<<") "<<mot<<" (Taille : "<<mot.size()<<")"<<endl;
-			mots.push_back(mot);
-			if(tailleMax<mot.size()){
-				tailleMax=mot.size();
+		string mot = "";
+		
+		if(optionIs != -1){
+			string nomFichierDesSequences = argv[optionIs];
+			ifstream fichierDesSeq(nomFichierDesSequences);
+   			if(fichierDesSeq){
+      			string ligne; 
+				string resultat=""; 
+				
+      			while(getline(fichierDesSeq, ligne)){ 
+      				if (ligne[0]!='>'){
+        				for(int i=0;i<ligne.size();i++){
+        					if(ligne[i]!=' '){
+        						mot+=ligne[i];
+        					}else{
+        						cout<<nbMots<<") "<<mot<<" (Taille : "<<mot.size()<<")"<<endl;
+								mots.push_back(mot);
+								if(tailleMax<mot.size()){
+									tailleMax=mot.size();
+								}
+								mot = "";
+								nbMots++;
+        					}
+        				}
+        				if(mot != ""){
+        					cout<<nbMots<<") "<<mot<<" (Taille : "<<mot.size()<<")"<<endl;
+							mots.push_back(mot);
+							if(tailleMax<mot.size()){
+								tailleMax=mot.size();
+							}
+							mot = "";
+							nbMots++;
+        				}
+        			}
+      			}
+   			}else{
+      			cout << "ERREUR: Impossible d'ouvrir le fichier de lecture des séquences." << endl;
+   			}
+		}else{
+			nbMots = argc-1;
+			for(int i=1; i<argc; i++){
+				mot = argv[i];
+				cout<<i-1<<") "<<mot<<" (Taille : "<<mot.size()<<")"<<endl;
+				mots.push_back(mot);
+				if(tailleMax<mot.size()){
+					tailleMax=mot.size();
+				}
 			}
-		}
+		}	
+		
 		cout<<"Taille Max : "<<tailleMax<<endl<<endl;
 		
 		// Scores d'alignement
