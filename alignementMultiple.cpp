@@ -256,6 +256,12 @@ void affichageArguments(){
 	cout<<"	-is <valeur> 	permet de donner le nom d'un fichier, au format fasta, contenant des séquences de nucléotide à aligner."<<endl;
 	cout<<endl;
 	cout<<endl;
+	cout<<"	-o <valeur> 	permet de donner le nom du fichier pour sauvegarder le résultat de l'alignementMultiple sous forme d'abre."<<endl;
+	cout<<endl;
+	cout<<"Si l'option -is n'est pas présente les séquences peuvent être passées en argument du script."<<endl;
+	cout<<"Attention cependant si on veut exécuter le script comme décrit au dessus avec l'option -o les séquences présentent après l'option ne seront pas alignées."<<endl;
+	cout<<endl;
+	cout<<endl;
 }
 
 
@@ -264,6 +270,7 @@ int main(int argc, char *argv[]){
 	bool erreurOption = false;	//une erreur dans la saisie des commandes
 	bool optionH = false;	//affichage de l'aide
 	int optionIs = -1;	//fichier contenant l'arbre des mutations.
+	int optionO = -1;	//donner le nom du fichier pour sauvegarder le résultat de l'alignementMultiple sous forme d'abre
 	
 	unsigned int indice = 0;
 	
@@ -278,6 +285,8 @@ int main(int argc, char *argv[]){
 				if(((indice+1) < argc)&&(std::string(argv[indice+1])[0] != '-')){
 					if((option == "-is")||(option == "-iS")||(option == "-IS")||(option == "-Is")){
 						optionIs = indice+1;
+					}else if((option == "-o")||(option == "-O")){
+						optionO = indice+1;
 					}else {
 						cout<<"Il y a une erreur dans les options veuillez respecter la syntaxe si dessous : "<<endl;
 						erreurOption = true;
@@ -342,8 +351,12 @@ int main(int argc, char *argv[]){
       			cout << "ERREUR: Impossible d'ouvrir le fichier de lecture des séquences." << endl;
    			}
 		}else{
-			nbMots = argc-1;
-			for(int i=1; i<argc; i++){
+			if (optionO!=-1){
+				nbMots = (argc-1)-((argc)-(optionO-1));
+			}else{
+				nbMots = argc-1;
+			}
+			for(int i=1; i<(optionO-1); i++){
 				mot = argv[i];
 				cout<<i-1<<") "<<mot<<" (Taille : "<<mot.size()<<")"<<endl;
 				mots.push_back(mot);
@@ -354,173 +367,130 @@ int main(int argc, char *argv[]){
 		}	
 		
 		cout<<"Taille Max : "<<tailleMax<<endl<<endl;
-		
-		// Scores d'alignement
-		int indel = 1;
-		int mismatch = 1;
-		int match = 0;
-
-		// Matrice de scores
-		vector< vector<int> > S(nbMots+1, vector<int>(nbMots+1));
-		for(int i=0; i<nbMots; i++){
-			for(int j=i+1; j<nbMots; j++){
-				string mot1modif = "";
-				string mot2modif = "";
-				vector< vector<int> > M((int) mots[i].size()+1, vector<int>((int) mots[j].size()+1));
-				remplissageMatrice(M,mots[i],mots[j],indel,mismatch,match);
-				S[i][j] = alignement(M,mots[i],mots[j],mot1modif,mot2modif);
-				M.clear();
-			}
-		}
-		//afficherMatriceScore(S,nbMots);
-
-
-
-		// Détection du mot de score minimum
-		vector<int> Score(nbMots+1);
-		for(int i=0; i<nbMots; i++){
-			for(int j=i+1; j<nbMots; j++){
-				Score[i]+=S[i][j];
-				Score[j]+=S[i][j];
-			}
-		}
-		S.clear();
-
-		//cout<<"Tableau des scores : ";
-		//affichageTableau(Score,nbMots);
-		int minTableau = minimumTableau(Score,nbMots);
-		//cout<<"Valeur minimale du tableau : "<<minTableau<<endl;
-		int plusGrandMotSelonMin = motValMinTableau(Score,nbMots,minTableau,mots);
-		//cout<<"Mot choisi : "<<mots[plusGrandMotSelonMin]<<" ("<<plusGrandMotSelonMin<<")"<<endl;
-		//int min = tailleMax;
-		//minimumMatrice(S,tailleMax,nbMots,min,x,y);
-		//cout<<"Minimum : "<<min<<" ("<<x<<","<<y<<")"<<endl;
-
-		bool motChoisiChange=false;
-		int a;
-		for(int j=0; j<nbMots; j++){
-			if(j!=plusGrandMotSelonMin){
-				string mot1modif = "";
-				string mot2modif = "";
-				vector< vector<int> > M((int) mots[plusGrandMotSelonMin].size()+1, vector<int>((int) mots[j].size()+1));
-				remplissageMatrice(M,mots[plusGrandMotSelonMin],mots[j],indel,mismatch,match);
-				a = alignement(M,mots[plusGrandMotSelonMin],mots[j],mot1modif, mot2modif);
-				if(mot1modif.size()>mots[plusGrandMotSelonMin].size()){
-					motChoisiChange=true;
-					mots[plusGrandMotSelonMin]=mot1modif;
-				}
-			}
-		}
-		//cout<<"Mot choisi change : "<<motChoisiChange<<endl;
-		for(int j=0; j<nbMots; j++){
-			if(j!=plusGrandMotSelonMin){
-				string mot1modif = "";
-				string mot2modif = "";
-				vector< vector<int> > M((int) mots[plusGrandMotSelonMin].size()+1, vector<int>((int) mots[j].size()+1));
-				remplissageMatrice(M,mots[plusGrandMotSelonMin],mots[j],indel,mismatch,match);
-				a = alignement(M,mots[plusGrandMotSelonMin],mots[j],mot1modif,mot2modif);
-				mots[j] = mot2modif;		
-			}
-		}
-
-		/*for(int i=0; i<nbMots; i++){
-			int id=0;
-			string buffer="";
-			while(mots[i][id]!=(char) NULL){
-				buffer += mots[i][id];
-				id++;
-			}
-			mots[i]=buffer;
-		}
-
-		int tailleMaximum=0;
-		for(int i=0; i<nbMots; i++){
-			if(tailleMaximum<mots[i].size()){
-				tailleMaximum=mots[i].size();
-			}
-		}
-
-		for(int i=0; i<nbMots; i++){
-			int diff=tailleMaximum-mots[i].size();
-			if(diff!=0){
-				for(int nb=0; nb<diff; nb++){
-					mots[i] += "-";
-				}
-			}
-		}
-
-		bool tiret=true;
-		while(tiret){
+		if (nbMots != mots.size()){
+			affichageArguments();
+		}else{
+			// Scores d'alignement
+			int indel = 1;
+			int mismatch = 1;
+			int match = 0;
+	
+			// Matrice de scores
+			vector< vector<int> > S(nbMots+1, vector<int>(nbMots+1));
 			for(int i=0; i<nbMots; i++){
-				if(mots[i][tailleMaximum-1]!='-'){
-					tiret=false;
+				for(int j=i+1; j<nbMots; j++){
+					string mot1modif = "";
+					string mot2modif = "";
+					vector< vector<int> > M((int) mots[i].size()+1, vector<int>((int) mots[j].size()+1));
+					remplissageMatrice(M,mots[i],mots[j],indel,mismatch,match);
+					S[i][j] = alignement(M,mots[i],mots[j],mot1modif,mot2modif);
+					M.clear();
 				}
 			}
-			if(tiret){
-				for(int i=0; i<nbMots; i++){
-					mots[i]=mots[i].substr(0,tailleMaximum-1);
+	
+			// Détection du mot de score minimum
+			vector<int> Score(nbMots+1);
+			for(int i=0; i<nbMots; i++){
+				for(int j=i+1; j<nbMots; j++){
+					Score[i]+=S[i][j];
+					Score[j]+=S[i][j];
 				}
 			}
-			tailleMaximum--;
-		}*/
+			S.clear();
 
-		cout<<endl<<"MOTS ALIGNÉS : "<<endl;
-		for(int i=0; i<nbMots; i++){
-			cout<<mots[i]<<endl;
-		}
-		cout<<endl;
-
-
-		// Matrice de scores finale
-		vector< vector<int> > ScoreFinal(nbMots+1, vector<int>(nbMots+1));
-		for(int i=0; i<nbMots; i++){
-			for(int j=i+1; j<nbMots; j++){
-				string mot1modif = "";
-				string mot2modif = "";
-				vector< vector<int> > M((int) mots[i].size()+1, vector<int>((int) mots[j].size()+1));
-				remplissageMatrice(M,mots[i],mots[j],indel,mismatch,match);
-				ScoreFinal[i][j] = alignement(M,mots[i],mots[j],mot1modif,mot2modif);
-				M.clear();
+			int minTableau = minimumTableau(Score,nbMots);
+			int plusGrandMotSelonMin = motValMinTableau(Score,nbMots,minTableau,mots);
+	
+			bool motChoisiChange=false;
+			int a;
+			for(int j=0; j<nbMots; j++){
+				if(j!=plusGrandMotSelonMin){
+					string mot1modif = "";
+					string mot2modif = "";
+					vector< vector<int> > M((int) mots[plusGrandMotSelonMin].size()+1, vector<int>((int) mots[j].size()+1));
+					remplissageMatrice(M,mots[plusGrandMotSelonMin],mots[j],indel,mismatch,match);
+					a = alignement(M,mots[plusGrandMotSelonMin],mots[j],mot1modif, mot2modif);
+					if(mot1modif.size()>mots[plusGrandMotSelonMin].size()){
+						motChoisiChange=true;
+						mots[plusGrandMotSelonMin]=mot1modif;
+					}
+				}
 			}
-		}
-		afficherMatriceScore(ScoreFinal,nbMots);
-
-		vector<int> SommeScore(nbMots+1);
-		for(int i=0; i<nbMots; i++){
-			for(int j=i+1; j<nbMots; j++){
-				SommeScore[i]+=ScoreFinal[i][j];
-				SommeScore[j]+=ScoreFinal[i][j];
+			
+			for(int j=0; j<nbMots; j++){
+				if(j!=plusGrandMotSelonMin){
+					string mot1modif = "";
+					string mot2modif = "";
+					vector< vector<int> > M((int) mots[plusGrandMotSelonMin].size()+1, vector<int>((int) mots[j].size()+1));
+					remplissageMatrice(M,mots[plusGrandMotSelonMin],mots[j],indel,mismatch,match);
+					a = alignement(M,mots[plusGrandMotSelonMin],mots[j],mot1modif,mot2modif);
+					mots[j] = mot2modif;		
+				}
 			}
+	
+			cout<<endl<<"MOTS ALIGNÉS : "<<endl;
+			for(int i=0; i<nbMots; i++){
+				cout<<mots[i]<<endl;
+			}
+			cout<<endl;
+	
+	
+			// Matrice de scores finale
+			vector< vector<int> > ScoreFinal(nbMots+1, vector<int>(nbMots+1));
+			for(int i=0; i<nbMots; i++){
+				for(int j=i+1; j<nbMots; j++){
+					string mot1modif = "";
+					string mot2modif = "";
+					vector< vector<int> > M((int) mots[i].size()+1, vector<int>((int) mots[j].size()+1));
+					remplissageMatrice(M,mots[i],mots[j],indel,mismatch,match);
+					ScoreFinal[i][j] = alignement(M,mots[i],mots[j],mot1modif,mot2modif);
+					M.clear();
+				}
+			}
+			afficherMatriceScore(ScoreFinal,nbMots);
+	
+			vector<int> SommeScore(nbMots+1);
+			for(int i=0; i<nbMots; i++){
+				for(int j=i+1; j<nbMots; j++){
+					SommeScore[i]+=ScoreFinal[i][j];
+					SommeScore[j]+=ScoreFinal[i][j];
+				}
+			}
+
+			int x,y;
+			int min = tailleMax;
+			minimumMatrice(ScoreFinal,tailleMax,nbMots,min,x,y);
+	
+			// Arbre
+			string nomFichierMutation = "";
+	
+			if (optionO != -1){
+				int indiceVetification = 0;
+				string verification = argv[optionO];
+				while ((indiceVetification < verification.size())&&(verification[indiceVetification]!='.')){
+					indiceVetification++;
+				}
+				nomFichierMutation = verification.substr(0,indiceVetification);
+				nomFichierMutation += ".dot";
+				
+			
+	    		ofstream monFlux(nomFichierMutation);
+	
+	    		if(monFlux){
+		      		monFlux << "digraph A {" << endl;
+		        	while(min!=tailleMax){
+		        		monFlux << branche(mots[x],mots[y],min) << endl;
+		        		for(int i=0; i<y; i++){
+		        			ScoreFinal[i][y]=tailleMax;
+		        		}
+		        		minimumMatrice(ScoreFinal,tailleMax,nbMots,min,x,y);
+		        	}
+		        	monFlux << "}" << endl;
+		    	}else{
+		        	cout << "ERREUR : Impossible d'ouvrir le fichier pour la sauvegarde de l'arbre." << endl;
+		    	}
+		    }
 		}
-
-		//cout<<"Tableau des scores : ";
-		//affichageTableau(SommeScore,nbMots);
-		//int idMinTableau = idMinimumTableau(SommeScore,nbMots);
-		//cout<<idMinTableau<<endl;
-
-		int x,y;
-		int min = tailleMax;
-		minimumMatrice(ScoreFinal,tailleMax,nbMots,min,x,y);
-
-		// Arbre
-		string const nomFichier("arbre.dot");
-    	ofstream monFlux(nomFichier.c_str());
-
-    	if(monFlux){
-	        monFlux << "digraph A {" << endl;
-	        while(min!=tailleMax){
-	        	monFlux << branche(mots[x],mots[y],min) << endl;
-	        	for(int i=0; i<y; i++){
-	        		ScoreFinal[i][y]=tailleMax;
-	        	}
-	        	minimumMatrice(ScoreFinal,tailleMax,nbMots,min,x,y);
-	        }
-	        monFlux << "}" << endl;
-	    }
-	    else{
-	        cout << "ERREUR : Impossible d'ouvrir le fichier." << endl;
-	    }
-
 	}
 	
 	return 0;
