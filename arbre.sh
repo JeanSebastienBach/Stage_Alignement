@@ -1,9 +1,9 @@
-# Utilisation : ./alignementMultiple.sh sequence1 sequence2 ... sequenceN
+# Utilisation : ./arbre.sh -l taille -n nombre_sequence
 
 clear
 g++ alignementMultiple.cpp -Wall -o alignementMultiple
 g++ generation.cpp -Wall -o generation
-g++ comparaison.cpp -Wall -o comparaison
+g++ comparaisonMast.cpp -Wall -o comparaisonMast
 ./generation $@ -o resultat.txt -f -om arbreMutation.dot
 ./alignementMultiple -o arbre.dot -is resultat.txt
 dot -Tpng arbre.dot > arbre.png

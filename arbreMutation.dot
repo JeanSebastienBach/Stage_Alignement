@@ -1,0 +1,11 @@
+digraph Mutation { 
+"GAAGAGCCAG" -> "GAAGAGCTAG" [label=" 1"];
+"GAAGAGCTAG" -> "GAAGAGCAAG" [label=" 1"];
+"GAAGAGCAAG" -> "GAAGGAGCAAG" [label=" 1"];
+"GAAGGAGCAAG" -> "GAAGGAGCAG" [label=" 1"];
+"GAAGAGCTAG" -> "GAAGAGCTCG" [label=" 1"];
+"GAAGAGCCAG" -> "GAATAGCCAG" [label=" 1"];
+"GAAGGAGCAAG" -> "GAAGGCGCAAG" [label=" 1"];
+"GAAGAGCTCG" -> "GAAGAGCTCCG" [label=" 1"];
+"GAAGAGCTCG" -> "GAAGAGCCTCG" [label=" 1"];
+}
