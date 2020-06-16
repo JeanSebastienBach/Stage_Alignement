@@ -18,11 +18,10 @@ void affichageArguments(){
 	
 	cout<<endl;
 	cout<<endl;
-	cout<<"generation()			Manuel d'utilisation			generation()"<<endl;
+	cout<<"comparaison()			Manuel d'utilisation			comparaison()"<<endl;
 	cout<<endl;
 	cout<<endl;
-	cout<<"La fonction generation() permet de produire une serie de séquence créer par mutations issues soit d'une séquence générée par un HMM soit d'une séquence passée en option."<<endl;
-	cout<<"Les options portant une * sont obligatoires."<<endl;
+	cout<<"La fonction comparaison() permet de produire un score de comparaison entre deux arbres."<<endl;
 	cout<<endl;
 	cout<<"Options unaires : "<<endl;
 	cout<<endl;

@@ -48,31 +48,19 @@ void modificationTabProbaNucleotides(vector<string> tabSequence,float tabProbaNu
 			if(dernierNucleotide=='A'){
 				switch(actuelNucleotide){
        		 		case 'A' :
-       		 			tabProbaNucleotides[0][0] = (((tabNbNucleotideConsiderer[0]*tabProbaNucleotides[0][0])+1)/(tabNbNucleotideConsiderer[0]+1));
-       		 			tabProbaNucleotides[0][1] = ((tabNbNucleotideConsiderer[0]*tabProbaNucleotides[0][1])/(tabNbNucleotideConsiderer[0]+1));
-       		 			tabProbaNucleotides[0][2] = ((tabNbNucleotideConsiderer[0]*tabProbaNucleotides[0][2])/(tabNbNucleotideConsiderer[0]+1));
-       		 			tabProbaNucleotides[0][3] = ((tabNbNucleotideConsiderer[0]*tabProbaNucleotides[0][3])/(tabNbNucleotideConsiderer[0]+1));
+       		 			tabProbaNucleotides[0][0]++;
             			break;
 
         			case 'C' :
-        	    		tabProbaNucleotides[0][0] = ((tabNbNucleotideConsiderer[0]*tabProbaNucleotides[0][0])/(tabNbNucleotideConsiderer[0]+1));
-       		 			tabProbaNucleotides[0][1] = (((tabNbNucleotideConsiderer[0]*tabProbaNucleotides[0][1])+1)/(tabNbNucleotideConsiderer[0]+1));
-       		 			tabProbaNucleotides[0][2] = ((tabNbNucleotideConsiderer[0]*tabProbaNucleotides[0][2])/(tabNbNucleotideConsiderer[0]+1));
-       		 			tabProbaNucleotides[0][3] = ((tabNbNucleotideConsiderer[0]*tabProbaNucleotides[0][3])/(tabNbNucleotideConsiderer[0]+1));
+        	    		tabProbaNucleotides[0][1]++;
         	    		break;
 			
 			        case 'G' :
-    		    	    tabProbaNucleotides[0][0] = ((tabNbNucleotideConsiderer[0]*tabProbaNucleotides[0][0])/(tabNbNucleotideConsiderer[0]+1));
-       		 			tabProbaNucleotides[0][1] = ((tabNbNucleotideConsiderer[0]*tabProbaNucleotides[0][1])/(tabNbNucleotideConsiderer[0]+1));
-       		 			tabProbaNucleotides[0][2] = (((tabNbNucleotideConsiderer[0]*tabProbaNucleotides[0][2])+1)/(tabNbNucleotideConsiderer[0]+1));
-       		 			tabProbaNucleotides[0][3] = ((tabNbNucleotideConsiderer[0]*tabProbaNucleotides[0][3])/(tabNbNucleotideConsiderer[0]+1));
+    		    	    tabProbaNucleotides[0][2]++;
     			        break;
 			
 	    	    	case 'T' :
-	    		        tabProbaNucleotides[0][0] = ((tabNbNucleotideConsiderer[0]*tabProbaNucleotides[0][0])/(tabNbNucleotideConsiderer[0]+1));
-       		 			tabProbaNucleotides[0][1] = ((tabNbNucleotideConsiderer[0]*tabProbaNucleotides[0][1])/(tabNbNucleotideConsiderer[0]+1));
-       		 			tabProbaNucleotides[0][2] = ((tabNbNucleotideConsiderer[0]*tabProbaNucleotides[0][2])/(tabNbNucleotideConsiderer[0]+1));
-       		 			tabProbaNucleotides[0][3] = (((tabNbNucleotideConsiderer[0]*tabProbaNucleotides[0][3])+1)/(tabNbNucleotideConsiderer[0]+1));
+	    		        tabProbaNucleotides[0][3]++;
 			            break;
 				}
 				tabNbNucleotideConsiderer[0]++;
@@ -80,31 +68,19 @@ void modificationTabProbaNucleotides(vector<string> tabSequence,float tabProbaNu
 			else if(dernierNucleotide=='C'){
 				switch(actuelNucleotide){
        		 		case 'A' :
-       		 			tabProbaNucleotides[1][0] = (((tabNbNucleotideConsiderer[1]*tabProbaNucleotides[1][0])+1)/(tabNbNucleotideConsiderer[1]+1));
-       		 			tabProbaNucleotides[1][1] = ((tabNbNucleotideConsiderer[1]*tabProbaNucleotides[1][1])/(tabNbNucleotideConsiderer[1]+1));
-       		 			tabProbaNucleotides[1][2] = ((tabNbNucleotideConsiderer[1]*tabProbaNucleotides[1][2])/(tabNbNucleotideConsiderer[1]+1));
-       		 			tabProbaNucleotides[1][3] = ((tabNbNucleotideConsiderer[1]*tabProbaNucleotides[1][3])/(tabNbNucleotideConsiderer[1]+1));
+       		 			tabProbaNucleotides[1][0]++;
             			break;
 
         			case 'C' :
-        	    		tabProbaNucleotides[1][0] = ((tabNbNucleotideConsiderer[1]*tabProbaNucleotides[1][0])/(tabNbNucleotideConsiderer[1]+1));
-       		 			tabProbaNucleotides[1][1] = (((tabNbNucleotideConsiderer[1]*tabProbaNucleotides[1][1])+1)/(tabNbNucleotideConsiderer[1]+1));
-       		 			tabProbaNucleotides[1][2] = ((tabNbNucleotideConsiderer[1]*tabProbaNucleotides[1][2])/(tabNbNucleotideConsiderer[1]+1));
-       		 			tabProbaNucleotides[1][3] = ((tabNbNucleotideConsiderer[1]*tabProbaNucleotides[1][3])/(tabNbNucleotideConsiderer[1]+1));
+        	    		tabProbaNucleotides[1][1]++;
         	    		break;
 			
 			        case 'G' :
-    		    	    tabProbaNucleotides[1][0] = ((tabNbNucleotideConsiderer[1]*tabProbaNucleotides[1][0])/(tabNbNucleotideConsiderer[1]+1));
-       		 			tabProbaNucleotides[1][1] = ((tabNbNucleotideConsiderer[1]*tabProbaNucleotides[1][1])/(tabNbNucleotideConsiderer[1]+1));
-       		 			tabProbaNucleotides[1][2] = (((tabNbNucleotideConsiderer[1]*tabProbaNucleotides[1][2])+1)/(tabNbNucleotideConsiderer[1]+1));
-       		 			tabProbaNucleotides[1][3] = ((tabNbNucleotideConsiderer[1]*tabProbaNucleotides[1][3])/(tabNbNucleotideConsiderer[1]+1));
+    		    	    tabProbaNucleotides[1][2]++;
     			        break;
 			
 	    	    	case 'T' :
-	    		        tabProbaNucleotides[1][0] = ((tabNbNucleotideConsiderer[1]*tabProbaNucleotides[1][0])/(tabNbNucleotideConsiderer[1]+1));
-       		 			tabProbaNucleotides[1][1] = ((tabNbNucleotideConsiderer[1]*tabProbaNucleotides[1][1])/(tabNbNucleotideConsiderer[1]+1));
-       		 			tabProbaNucleotides[1][2] = ((tabNbNucleotideConsiderer[1]*tabProbaNucleotides[1][2])/(tabNbNucleotideConsiderer[1]+1));
-       		 			tabProbaNucleotides[1][3] = (((tabNbNucleotideConsiderer[1]*tabProbaNucleotides[1][3])+1)/(tabNbNucleotideConsiderer[1]+1));
+	    		        tabProbaNucleotides[1][3]++;
 			            break;
 				}
 				tabNbNucleotideConsiderer[1]++;
@@ -112,31 +88,19 @@ void modificationTabProbaNucleotides(vector<string> tabSequence,float tabProbaNu
 			else if(dernierNucleotide=='G'){
 				switch(actuelNucleotide){
        		 		case 'A' :
-       		 			tabProbaNucleotides[2][0] = (((tabNbNucleotideConsiderer[2]*tabProbaNucleotides[2][0])+1)/(tabNbNucleotideConsiderer[2]+1));
-       		 			tabProbaNucleotides[2][1] = ((tabNbNucleotideConsiderer[2]*tabProbaNucleotides[2][1])/(tabNbNucleotideConsiderer[2]+1));
-       		 			tabProbaNucleotides[2][2] = ((tabNbNucleotideConsiderer[2]*tabProbaNucleotides[2][2])/(tabNbNucleotideConsiderer[2]+1));
-       		 			tabProbaNucleotides[2][3] = ((tabNbNucleotideConsiderer[2]*tabProbaNucleotides[2][3])/(tabNbNucleotideConsiderer[2]+1));
+       		 			tabProbaNucleotides[2][0]++;
             			break;
 
         			case 'C' :
-        	    		tabProbaNucleotides[2][0] = ((tabNbNucleotideConsiderer[2]*tabProbaNucleotides[2][0])/(tabNbNucleotideConsiderer[2]+1));
-       		 			tabProbaNucleotides[2][1] = (((tabNbNucleotideConsiderer[2]*tabProbaNucleotides[2][1])+1)/(tabNbNucleotideConsiderer[2]+1));
-       		 			tabProbaNucleotides[2][2] = ((tabNbNucleotideConsiderer[2]*tabProbaNucleotides[2][2])/(tabNbNucleotideConsiderer[2]+1));
-       		 			tabProbaNucleotides[2][3] = ((tabNbNucleotideConsiderer[2]*tabProbaNucleotides[2][3])/(tabNbNucleotideConsiderer[2]+1));
+        	    		tabProbaNucleotides[2][1]++;
         	    		break;
 			
 			        case 'G' :
-    		    	    tabProbaNucleotides[2][0] = ((tabNbNucleotideConsiderer[2]*tabProbaNucleotides[2][0])/(tabNbNucleotideConsiderer[2]+1));
-       		 			tabProbaNucleotides[2][1] = ((tabNbNucleotideConsiderer[2]*tabProbaNucleotides[2][1])/(tabNbNucleotideConsiderer[2]+1));
-       		 			tabProbaNucleotides[2][2] = (((tabNbNucleotideConsiderer[2]*tabProbaNucleotides[2][2])+1)/(tabNbNucleotideConsiderer[2]+1));
-       		 			tabProbaNucleotides[2][3] = ((tabNbNucleotideConsiderer[2]*tabProbaNucleotides[2][3])/(tabNbNucleotideConsiderer[2]+1));
+    		    	    tabProbaNucleotides[2][2]++;
     			        break;
 			
 	    	    	case 'T' :
-	    		        tabProbaNucleotides[2][0] = ((tabNbNucleotideConsiderer[2]*tabProbaNucleotides[2][0])/(tabNbNucleotideConsiderer[2]+1));
-       		 			tabProbaNucleotides[2][1] = ((tabNbNucleotideConsiderer[2]*tabProbaNucleotides[2][1])/(tabNbNucleotideConsiderer[2]+1));
-       		 			tabProbaNucleotides[2][2] = ((tabNbNucleotideConsiderer[2]*tabProbaNucleotides[2][2])/(tabNbNucleotideConsiderer[2]+1));
-       		 			tabProbaNucleotides[2][3] = (((tabNbNucleotideConsiderer[2]*tabProbaNucleotides[2][3])+1)/(tabNbNucleotideConsiderer[2]+1));
+	    		        tabProbaNucleotides[2][3]++;
 			            break;
 				}
 				tabNbNucleotideConsiderer[2]++;
@@ -144,35 +108,28 @@ void modificationTabProbaNucleotides(vector<string> tabSequence,float tabProbaNu
 			else if(dernierNucleotide=='T'){
 				switch(actuelNucleotide){
        		 		case 'A' :
-       		 			tabProbaNucleotides[3][0] = (((tabNbNucleotideConsiderer[3]*tabProbaNucleotides[3][0])+1)/(tabNbNucleotideConsiderer[3]+1));
-       		 			tabProbaNucleotides[3][1] = ((tabNbNucleotideConsiderer[3]*tabProbaNucleotides[3][1])/(tabNbNucleotideConsiderer[3]+1));
-       		 			tabProbaNucleotides[3][2] = ((tabNbNucleotideConsiderer[3]*tabProbaNucleotides[3][2])/(tabNbNucleotideConsiderer[3]+1));
-       		 			tabProbaNucleotides[3][3] = ((tabNbNucleotideConsiderer[3]*tabProbaNucleotides[3][3])/(tabNbNucleotideConsiderer[3]+1));
+       		 			tabProbaNucleotides[3][0]++;
             			break;
 
         			case 'C' :
-        	    		tabProbaNucleotides[3][0] = ((tabNbNucleotideConsiderer[3]*tabProbaNucleotides[3][0])/(tabNbNucleotideConsiderer[3]+1));
-       		 			tabProbaNucleotides[3][1] = (((tabNbNucleotideConsiderer[3]*tabProbaNucleotides[3][1])+1)/(tabNbNucleotideConsiderer[3]+1));
-       		 			tabProbaNucleotides[3][2] = ((tabNbNucleotideConsiderer[3]*tabProbaNucleotides[3][2])/(tabNbNucleotideConsiderer[3]+1));
-       		 			tabProbaNucleotides[3][3] = ((tabNbNucleotideConsiderer[3]*tabProbaNucleotides[3][3])/(tabNbNucleotideConsiderer[3]+1));
+        	    		tabProbaNucleotides[3][1]++;
         	    		break;
 			
 			        case 'G' :
-    		    	    tabProbaNucleotides[3][0] = ((tabNbNucleotideConsiderer[3]*tabProbaNucleotides[3][0])/(tabNbNucleotideConsiderer[3]+1));
-       		 			tabProbaNucleotides[3][1] = ((tabNbNucleotideConsiderer[3]*tabProbaNucleotides[3][1])/(tabNbNucleotideConsiderer[3]+1));
-       		 			tabProbaNucleotides[3][2] = (((tabNbNucleotideConsiderer[3]*tabProbaNucleotides[3][2])+1)/(tabNbNucleotideConsiderer[3]+1));
-       		 			tabProbaNucleotides[3][3] = ((tabNbNucleotideConsiderer[3]*tabProbaNucleotides[3][3])/(tabNbNucleotideConsiderer[3]+1));
+    		    	    tabProbaNucleotides[3][2]++;
     			        break;
 			
 	    	    	case 'T' :
-	    		        tabProbaNucleotides[3][0] = ((tabNbNucleotideConsiderer[3]*tabProbaNucleotides[3][0])/(tabNbNucleotideConsiderer[3]+1));
-       		 			tabProbaNucleotides[3][1] = ((tabNbNucleotideConsiderer[3]*tabProbaNucleotides[3][1])/(tabNbNucleotideConsiderer[3]+1));
-       		 			tabProbaNucleotides[3][2] = ((tabNbNucleotideConsiderer[3]*tabProbaNucleotides[3][2])/(tabNbNucleotideConsiderer[3]+1));
-       		 			tabProbaNucleotides[3][3] = (((tabNbNucleotideConsiderer[3]*tabProbaNucleotides[3][3])+1)/(tabNbNucleotideConsiderer[3]+1));
+	    		        tabProbaNucleotides[3][3]++;
 			            break;
 				}
 				tabNbNucleotideConsiderer[3]++;
 			}
+		}
+	}
+	for(int i = 0;i<4;i++){
+		for(int j=0;j<4;j++){
+			tabProbaNucleotides[i][j] = tabProbaNucleotides[i][j]/tabNbNucleotideConsiderer[i];
 		}
 	}
 	if (!optionF){
