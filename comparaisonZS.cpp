@@ -83,6 +83,16 @@ int main(int argc, char** argv,char** env){
 		string nomFichierArbreMutation = argv[optionAm];
 		ifstream fichierArbreMutation(nomFichierArbreMutation);
 		if(fichierArbreMutation){
+			string nomFichierArbreMutation2 = argv[optionAg];
+			ifstream fichierArbreMutation2(nomFichierArbreMutation2);
+			if(fichierArbreMutation2){
+      			string ligne;
+      			while(getline(fichierArbreMutation2, ligne)){
+         			cout << ligne << endl;
+				}
+	   		}else{
+	      		cout << "ERREUR: Impossible d'ouvrir le fichier de lecture de l'arbre de mutation générées." << endl;
+	   		}
       		
    		}else{
       		cout << "ERREUR: Impossible d'ouvrir le fichier de lecture de l'arbre de mutation." << endl;

@@ -364,7 +364,9 @@ int main(int argc, char *argv[]){
 					tailleMax=mot.size();
 				}
 			}
-		}	
+		}
+
+		vector<string> motsCopie = mots;	
 		
 		cout<<"Taille Max : "<<tailleMax<<endl<<endl;
 		if (nbMots != mots.size()){
@@ -479,7 +481,8 @@ int main(int argc, char *argv[]){
 	    		if(monFlux){
 		      		monFlux << "digraph A {" << endl;
 		        	while(min!=tailleMax){
-		        		monFlux << branche(mots[x],mots[y],min) << endl;
+		        		monFlux << branche(mots[x], mots[y], min) << endl;
+		        		monFlux << "// " + motsCopie[x] + " " + motsCopie[y] + " " + to_string(min) << endl;
 		        		for(int i=0; i<y; i++){
 		        			ScoreFinal[i][y]=tailleMax;
 		        		}

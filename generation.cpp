@@ -237,6 +237,7 @@ vector<string> generationMutation(string s,int nbSeq, string nomFichierArbreMuta
 				res.push_back(nouvelleSeq);
 				if (nomFichierArbreMutation != ""){
 					arbreMutation += "\"" + res[i] + "\" -> \"" + nouvelleSeq + "\" [label=\" " + to_string(nbModifNucleotide) + "\"];\n";
+					arbreMutation += "// " + res[i] + " " + nouvelleSeq + " " + to_string(nbModifNucleotide) + "\n";
 				}
 				nbModifNucleotide = 0;
 			}

@@ -1,11 +1,12 @@
 digraph A {
-"GAA-GAGCT--AG" -> "GAA-GAGCA--AG" [label=" 1"];
-"GAA-GAGCA--AG" -> "GAAGGAGCA--AG" [label=" 1"];
-"GAA-GAGCTC--G" -> "GAA-GAGCTCC-G" [label=" 1"];
-"GAA-GAGC-C-AG" -> "GAA-GAGCT--AG" [label=" 2"];
-"GAA-GAGC-C-AG" -> "GAAGGAG--C-AG" [label=" 2"];
-"GAA-GAGC-C-AG" -> "GAA-GAGCTC--G" [label=" 2"];
-"GAA-GAGC-C-AG" -> "GAAT-AGC-C-AG" [label=" 2"];
-"GAA-GAGC-C-AG" -> "GAA-GAGC-CTCG" [label=" 2"];
-"GAA-GAGC-C-AG" -> "GAA-G-GCGCAAG" [label=" 3"];
+"CACTGGCA-TT" -> "CACTGGCG-TT" [label=" 1"];
+// CACTGGCATT CACTGGCGTT 1
+"CACTGGCG-TT" -> "CACTGGCG--T" [label=" 1"];
+// CACTGGCGTT CACTGGCGT 1
+"CACTGGCG-TT" -> "AACTGGCG-TT" [label=" 1"];
+// CACTGGCGTT AACTGGCGTT 1
+"CACTGGCA-TT" -> "CACTGGCCATT" [label=" 2"];
+// CACTGGCATT CACTGGCCATT 2
+"CACTGGCG--T" -> "TACTGGCGG-T" [label=" 2"];
+// CACTGGCGT TACTGGCGGT 2
 }
