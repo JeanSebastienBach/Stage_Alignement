@@ -6,6 +6,106 @@
 
 using namespace std;
 
+struct Arbre
+{
+    string nom;
+    vector<Arbre> fils;
+};
+
+void afficherArbre(Arbre a){
+	cout<<a.nom;
+	cout<<" [ ";
+	for(int i=0; i<a.fils.size(); i++){
+		afficherArbre(a.fils[i]);
+		cout<<" ";
+	}
+	cout<<"] ";
+}
+
+Arbre generationArbre(vector<string> branchesArbre){
+	vector<Arbre> arbres;
+
+	// Initialisation
+	int i = 0;
+	int nb = branchesArbre.size()/2;
+	while(i<=nb){
+		Arbre a = Arbre();
+		a.nom = branchesArbre[i*2];
+		Arbre b = Arbre();
+		b.nom = branchesArbre[(i*2)+1];
+		a.fils.push_back(b);
+		arbres.push_back(a);
+		i++;
+	}
+
+	// Deux arbres ont la même racine, on fusionne leurs sous-arbres
+	int trouve=true;
+	while(trouve){
+		int x=0;
+		trouve=false;
+		while(x<arbres.size()-1 && !trouve){
+			int y=x+1;
+			while(y<arbres.size() && !trouve){
+				if(arbres[x].nom==arbres[y].nom){
+					trouve=true;
+					arbres[x].fils.insert(arbres[x].fils.end(), arbres[y].fils.begin(), arbres[y].fils.end());
+					arbres.erase(arbres.begin()+ y);
+				}
+				y++;
+			}
+			x++;
+		}
+	}
+
+	for(int n=0; n<arbres.size(); n++){
+		afficherArbre(arbres[n]);
+		cout<<endl;
+	}
+
+	// Un arbre est sous-arbre de l'autre
+	trouve=true;
+	while(trouve){
+		int x=0;
+		trouve=false;
+		while(x<arbres.size()-1 && !trouve){
+			int y=x+1;
+			while(y<arbres.size() && !trouve){
+				int id=0;
+				while(id<arbres[x].fils.size() && !trouve){
+					if(arbres[x].fils[id].nom==arbres[y].nom){
+						trouve=true;
+						arbres[x].fils[id]=arbres[y];
+						arbres.erase(arbres.begin()+ y);
+					}
+					id++;
+				}
+				id=0;
+				while(id<arbres[y].fils.size() && !trouve){
+					if(arbres[y].fils[id].nom==arbres[x].nom){
+						trouve=true;
+						arbres[y].fils[id]=arbres[x];
+						arbres.erase(arbres.begin()+ x);
+					}
+					id++;
+				}
+				y++;
+			}
+			x++;
+		}
+	}
+
+	cout<<endl;
+
+	for(int n=0; n<arbres.size(); n++){
+		afficherArbre(arbres[n]);
+		cout<<endl;
+	}
+
+
+
+	return arbres[0];
+}
+
 string getTimeStr(){
     time_t now = chrono::system_clock::to_time_t(chrono::system_clock::now());
 
@@ -80,25 +180,76 @@ int main(int argc, char** argv,char** env){
 		indice++;
 	}
 	if ((optionAm != -1)&&(optionAg != -1)&&(!erreurOption)){
+
+		cout<< "ARBRE" << endl;
+		
 		string nomFichierArbreMutation = argv[optionAm];
 		ifstream fichierArbreMutation(nomFichierArbreMutation);
+		vector<string> branchesArbre;
 		if(fichierArbreMutation){
+			string ligne;
+  			while(getline(fichierArbreMutation, ligne)){
+  				if(ligne[0]=='/'){
+  					vector<string> motLigne;
+					string s = "";
+					for(int c=0; c<ligne.size(); c++){
+						if(ligne[c]==' '){
+							motLigne.push_back(s);
+							s = "";
+						}
+						else{
+							s += ligne[c];
+						}
+					}
+					branchesArbre.push_back(motLigne[1]);
+					branchesArbre.push_back(motLigne[2]);
+  					cout << "'" << motLigne[1] << "' -> '" << motLigne[2] << "'" << endl;
+  				}
+			}
+
+			Arbre A = generationArbre(branchesArbre);
+			//afficherArbre(A);
+
+			cout << endl << "ARBRE 2" << endl;
+
 			string nomFichierArbreMutation2 = argv[optionAg];
 			ifstream fichierArbreMutation2(nomFichierArbreMutation2);
+			vector<string> branchesArbre2;
 			if(fichierArbreMutation2){
-      			string ligne;
-      			while(getline(fichierArbreMutation2, ligne)){
-         			cout << ligne << endl;
+      			string ligne2;
+      			while(getline(fichierArbreMutation2, ligne2)){
+      				if(ligne2[0]=='/'){
+      					vector<string> motLigne2;
+						string s2 = "";
+						for(int c=0; c<ligne2.size(); c++){
+							if(ligne2[c]==' '){
+								motLigne2.push_back(s2);
+								s2 = "";
+							}
+							else{
+								s2 += ligne2[c];
+							}
+						}
+						branchesArbre2.push_back(motLigne2[1]);
+						branchesArbre2.push_back(motLigne2[2]);
+      					cout << "'" << motLigne2[1] << "' -> '" << motLigne2[2] << "'" << endl;
+      				}
 				}
-	   		}else{
+
+				Arbre A2 = generationArbre(branchesArbre2);
+
+	   		}
+	   		else{
 	      		cout << "ERREUR: Impossible d'ouvrir le fichier de lecture de l'arbre de mutation générées." << endl;
 	   		}
       		
-   		}else{
+   		}
+   		else{
       		cout << "ERREUR: Impossible d'ouvrir le fichier de lecture de l'arbre de mutation." << endl;
    		}
 		
-	}else{
+	}
+	else{
 		affichageArguments();
 	}
   
