@@ -1,10 +1,11 @@
+#!/bin/bash
 # Utilisation : ./arbre.sh -l taille -n nombre_sequence
 
 clear
 g++ alignementMultiple.cpp -Wall -o alignementMultiple
 g++ generation.cpp -Wall -o generation
 nomDeFichier=$(date +%Y%m%d)
-./generation $@ resultat.txt -f -om arbreMutation.dot > $nomDeFichier
+./generation $@ -o resultat.txt -f -om arbreMutation.dot > $nomDeFichier
 
 cat $nomDeFichier
 erreurGeneration=$(grep -c 'generation()' $nomDeFichier)

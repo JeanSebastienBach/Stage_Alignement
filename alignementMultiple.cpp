@@ -479,7 +479,7 @@ int main(int argc, char *argv[]){
 	    		ofstream monFlux(nomFichierMutation);
 	
 	    		if(monFlux){
-		      		monFlux << "digraph A {" << endl;
+		      		monFlux << "digraph mutation {" << endl;
 		        	while(min!=tailleMax){
 		        		monFlux << branche(mots[x], mots[y], min) << endl;
 		        		monFlux << "// " + motsCopie[x] + " " + motsCopie[y] + " " + to_string(min) << endl;

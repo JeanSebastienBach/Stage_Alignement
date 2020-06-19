@@ -1,3 +1,4 @@
+#!/bin/bash
 # Utilisation : ./alignementMultiple.sh sequence1 sequence2 ... sequenceN
 
 clear

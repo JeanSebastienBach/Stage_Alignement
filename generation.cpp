@@ -196,7 +196,7 @@ vector<string> generationMutation(string s,int nbSeq, string nomFichierArbreMuta
 	char ancienNucleotide;
 	string nouvelleSeq = "";
 	string nouveauNucleotide = "";
-	string arbreMutation = "digraph Mutation { \n"; 
+	string arbreMutation = "digraph mutation { \n"; 
 
     int i = 0;		
 	while (res.size()<nbSeq){
