@@ -126,7 +126,7 @@ void affichageArguments(){
 	cout<<"Options unaires : "<<endl;
 	cout<<endl;
 	cout<<endl;
-	cout<<"	-h/-help 	permet d'afficher le manuel d'utilisation."<<endl;
+	cout<<"	-h/--help 	permet d'afficher le manuel d'utilisation."<<endl;
 	cout<<endl;
 	cout<<endl;
 	cout<<"Options binaires : "<<endl;
@@ -153,7 +153,7 @@ int main(int argc, char** argv,char** env){
 	while((indice < argc)&&(!erreurOption)){	
 		option = std::string(argv[indice]);
 		if(option[0] == '-'){
-			if ((option == "-h")||(option == "-help")||(option == "-H")){
+			if ((option == "-h")||(option == "--help")||(option == "-H")){
 				optionH = true;
 			}else{
 				

@@ -1,11 +1,38 @@
-# Utilisation : ./comparaison.sh -l taille -n nombre_sequence
+#!/bin/bash
 
 clear
-g++ alignementMultiple.cpp -Wall -o alignementMultiple
-g++ generation.cpp -Wall -o generation
-g++ comparaisonZS.cpp -Wall -o comparaisonZS
-./generation $@ -o resultat.txt -f -om arbreMutation.dot
-./alignementMultiple -o arbre.dot -is resultat.txt
-dot -Tpng arbre.dot > arbre.png
-dot -Tpng arbreMutation.dot > arbreMutation.png
-./comparaisonZS -am arbre.dot -ag arbreMutation.dot
+HELP="écrire l'aide !"
+set -e
+optionC=false
+while [[ $# > 0 ]] 
+do
+
+	if  [[ '-' == "${1:0:1}" ]] 
+	then
+		case "${1}" in
+    	    -h|--help)
+    	        echo "${HELP}"
+    	        exit 0
+    	    ;;
+    	    -c)
+    	        optionC=true
+    	    ;;
+    		*)
+    	      echo "Invalid \"${1}\" option. See ${0} --help"
+    	      exit 1
+    	   ;;
+    	esac
+    fi
+    shift
+done
+
+if [ "$optionC" = true ]
+then
+	g++ comparaisonZS.cpp -Wall -o comparaisonZS
+	./comparaisonBash.sh -am arbre.dot -ag arbreMutation.dot
+	./comparaisonZS -am arbre.dot -ag arbreMutation.dot
+else
+	./comparaisonBash.sh -am arbre.dot -ag arbreMutation.dot
+	./comparaisonZS -am arbre.dot -ag arbreMutation.dot	
+fi
+

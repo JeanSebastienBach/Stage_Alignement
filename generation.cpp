@@ -213,7 +213,7 @@ vector<string> generationMutation(string s,int nbSeq, string nomFichierArbreMuta
 						nouvelleSeq = duplicationNucleotide(nouvelleSeq,j); 
 					}else if(valeurGenerer <= (probaDuplicationNucleotide + probaSuppressionNucleotide)*1000){
 						nouvelleSeq = suppressionNucleotide(nouvelleSeq,j);
-					}else {
+					}else if(valeurGenerer <= (probaDuplicationNucleotide + probaSuppressionNucleotide + probaChangementNucleotide)*1000){
 						ancienNucleotide = nouvelleSeq[j];
 						if(ancienNucleotide=='A'){
 							mutationSequence[0]=0.000;
@@ -275,7 +275,7 @@ void affichageArguments(){
 	cout<<endl;
 	cout<<"	-f		permet de filtrer l'affichage de sortie afin d'afficher seulement les séquences séparées par un espace."<<endl;
 	cout<<endl;
-	cout<<"	-h/-help 	permet d'afficher le manuel d'utilisation."<<endl;
+	cout<<"	-h/--help 	permet d'afficher le manuel d'utilisation."<<endl;
 	cout<<endl;
 	cout<<"	-m		permet d'autoriser l'utilisation de parallèlisme pour la génération des mutations. (à préciser avec les données) "<<endl;
 	cout<<endl;
@@ -327,7 +327,7 @@ int main(int argc, char** argv,char** env){
 		if(option[0] == '-'){
 			if ((option == "-f")||(option == "-F")){
 				optionF = true;
-			}else if ((option == "-h")||(option == "-help")||(option == "-H")){
+			}else if ((option == "-h")||(option == "--help")||(option == "-H")){
 				optionH = true;
 			}else if ((option == "-m")||(option == "-M")){
 				optionM = true;
