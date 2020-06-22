@@ -22,6 +22,40 @@ void afficherArbre(Arbre a){
 	cout<<"] ";
 }
 
+// Pour fusionner a1 et a2 si a2 est un noeud de a1
+Arbre fusionArbre(Arbre a1, Arbre a2){
+	//cout<<"a1.nom | a2.nom : "<<a1.nom<< " | "<<a2.nom<<endl;
+	if(a1.nom == a2.nom){
+		a1.fils.insert(a1.fils.end(), a2.fils.begin(), a2.fils.end());
+		return a1;
+	}
+	if(a1.fils.size()==0){
+		Arbre arbreVide;
+		arbreVide.nom="NULL";
+		return arbreVide;
+	}
+	int i=0;
+	bool trouve=false;
+	Arbre temp;
+	while(i<=a1.fils.size()-1 && !trouve){
+		temp = fusionArbre(a1.fils[i],a2);
+		if(temp.nom!="NULL"){
+			trouve=true;
+		}
+		i++;
+	}
+	//cout<<"OU JE SUIS"<<endl;
+	if(!trouve){
+		Arbre arbreVide;
+		arbreVide.nom="NULL";
+		return arbreVide;
+	}
+	else{
+		a1.fils[i-1]=temp;
+		return a1;
+	}
+}
+
 Arbre generationArbre(vector<string> branchesArbre){
 	vector<Arbre> arbres;
 
@@ -43,9 +77,9 @@ Arbre generationArbre(vector<string> branchesArbre){
 	while(trouve){
 		int x=0;
 		trouve=false;
-		while(x<arbres.size()-1 && !trouve){
+		while(x<arbres.size()-2 && !trouve){
 			int y=x+1;
-			while(y<arbres.size() && !trouve){
+			while(y<arbres.size()-1 && !trouve){
 				if(arbres[x].nom==arbres[y].nom){
 					trouve=true;
 					arbres[x].fils.insert(arbres[x].fils.end(), arbres[y].fils.begin(), arbres[y].fils.end());
@@ -57,19 +91,20 @@ Arbre generationArbre(vector<string> branchesArbre){
 		}
 	}
 
-	for(int n=0; n<arbres.size(); n++){
+	/*for(int n=0; n<arbres.size()-1; n++){
 		afficherArbre(arbres[n]);
 		cout<<endl;
-	}
+	}*/
 
+	
 	// Un arbre est sous-arbre de l'autre
 	trouve=true;
 	while(trouve){
 		int x=0;
 		trouve=false;
-		while(x<arbres.size()-1 && !trouve){
+		while(x<arbres.size()-2 && !trouve){
 			int y=x+1;
-			while(y<arbres.size() && !trouve){
+			while(y<arbres.size()-1 && !trouve){
 				int id=0;
 				while(id<arbres[x].fils.size() && !trouve){
 					if(arbres[x].fils[id].nom==arbres[y].nom){
@@ -80,7 +115,7 @@ Arbre generationArbre(vector<string> branchesArbre){
 					id++;
 				}
 				id=0;
-				while(id<arbres[y].fils.size() && !trouve){
+				while(id<arbres[y].fils.size()-1 && !trouve){
 					if(arbres[y].fils[id].nom==arbres[x].nom){
 						trouve=true;
 						arbres[y].fils[id]=arbres[x];
@@ -96,12 +131,49 @@ Arbre generationArbre(vector<string> branchesArbre){
 
 	cout<<endl;
 
-	for(int n=0; n<arbres.size(); n++){
+	/*for(int n=0; n<arbres.size()-1; n++){
 		afficherArbre(arbres[n]);
 		cout<<endl;
+	}*/
+
+
+	// Mettre tous les sous-arbres dans le premier
+	while(arbres.size()>2){
+		//cout<<"Taille : "<<arbres.size()-1<<endl;
+
+		/*cout<<"ARBRES DEBUT ----"<<endl;
+		for(int n=0; n<arbres.size()-1; n++){
+			afficherArbre(arbres[n]);
+			cout<<endl;
+		}
+		cout<<"----"<<endl;*/
+
+
+		Arbre temp = fusionArbre(arbres[0], arbres[1]);
+		//cout<<"<><><>"<<endl;
+		Arbre temp2 = fusionArbre(arbres[1], arbres[0]);
+
+		/*cout<<"Temp : ";
+		afficherArbre(temp);
+		cout<<"Temp2 : ";
+		afficherArbre(temp2);*/
+
+		if(temp.nom=="NULL"){
+			arbres[1]=temp2;
+			arbres.erase(arbres.begin()+ 0);
+		}
+		else if(temp2.nom=="NULL"){
+			arbres[0]=temp;
+			arbres.erase(arbres.begin()+ 1);
+		}
+
+		/*cout<<"ARBRES FIN ----"<<endl;
+		for(int n=0; n<arbres.size()-1; n++){
+			afficherArbre(arbres[n]);
+			cout<<endl;
+		}
+		cout<<"----"<<endl;*/
 	}
-
-
 
 	return arbres[0];
 }
@@ -181,7 +253,7 @@ int main(int argc, char** argv,char** env){
 	}
 	if ((optionAm != -1)&&(optionAg != -1)&&(!erreurOption)){
 
-		cout<< "ARBRE" << endl;
+		//cout<< "ARBRE" << endl;
 		
 		string nomFichierArbreMutation = argv[optionAm];
 		ifstream fichierArbreMutation(nomFichierArbreMutation);
@@ -203,14 +275,14 @@ int main(int argc, char** argv,char** env){
 					}
 					branchesArbre.push_back(motLigne[1]);
 					branchesArbre.push_back(motLigne[2]);
-  					cout << "'" << motLigne[1] << "' -> '" << motLigne[2] << "'" << endl;
+  					//cout << "'" << motLigne[1] << "' -> '" << motLigne[2] << "'" << endl;
   				}
 			}
 
 			Arbre A = generationArbre(branchesArbre);
 			//afficherArbre(A);
 
-			cout << endl << "ARBRE 2" << endl;
+			//cout << endl << "ARBRE 2" << endl;
 
 			string nomFichierArbreMutation2 = argv[optionAg];
 			ifstream fichierArbreMutation2(nomFichierArbreMutation2);
@@ -232,11 +304,17 @@ int main(int argc, char** argv,char** env){
 						}
 						branchesArbre2.push_back(motLigne2[1]);
 						branchesArbre2.push_back(motLigne2[2]);
-      					cout << "'" << motLigne2[1] << "' -> '" << motLigne2[2] << "'" << endl;
+      					//cout << "'" << motLigne2[1] << "' -> '" << motLigne2[2] << "'" << endl;
       				}
 				}
 
 				Arbre A2 = generationArbre(branchesArbre2);
+
+				cout<<"A : ";
+				afficherArbre(A);
+				cout<<endl<<"A2 : ";
+				afficherArbre(A2);
+				cout<<endl;
 
 	   		}
 	   		else{
