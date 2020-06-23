@@ -24,7 +24,6 @@ void afficherArbre(Arbre a){
 
 // Pour fusionner a1 et a2 si a2 est un noeud de a1
 Arbre fusionArbre(Arbre a1, Arbre a2){
-	//cout<<"a1.nom | a2.nom : "<<a1.nom<< " | "<<a2.nom<<endl;
 	if(a1.nom == a2.nom){
 		a1.fils.insert(a1.fils.end(), a2.fils.begin(), a2.fils.end());
 		return a1;
@@ -44,7 +43,6 @@ Arbre fusionArbre(Arbre a1, Arbre a2){
 		}
 		i++;
 	}
-	//cout<<"OU JE SUIS"<<endl;
 	if(!trouve){
 		Arbre arbreVide;
 		arbreVide.nom="NULL";
@@ -90,12 +88,6 @@ Arbre generationArbre(vector<string> branchesArbre){
 			x++;
 		}
 	}
-
-	/*for(int n=0; n<arbres.size()-1; n++){
-		afficherArbre(arbres[n]);
-		cout<<endl;
-	}*/
-
 	
 	// Un arbre est sous-arbre de l'autre
 	trouve=true;
@@ -131,48 +123,19 @@ Arbre generationArbre(vector<string> branchesArbre){
 
 	cout<<endl;
 
-	/*for(int n=0; n<arbres.size()-1; n++){
-		afficherArbre(arbres[n]);
-		cout<<endl;
-	}*/
-
-
 	// Mettre tous les sous-arbres dans le premier
 	while(arbres.size()>2){
-		//cout<<"Taille : "<<arbres.size()-1<<endl;
-
-		/*cout<<"ARBRES DEBUT ----"<<endl;
-		for(int n=0; n<arbres.size()-1; n++){
-			afficherArbre(arbres[n]);
-			cout<<endl;
-		}
-		cout<<"----"<<endl;*/
-
-
+		
 		Arbre temp = fusionArbre(arbres[0], arbres[1]);
-		//cout<<"<><><>"<<endl;
-		Arbre temp2 = fusionArbre(arbres[1], arbres[0]);
-
-		/*cout<<"Temp : ";
-		afficherArbre(temp);
-		cout<<"Temp2 : ";
-		afficherArbre(temp2);*/
-
-		if(temp.nom=="NULL"){
-			arbres[1]=temp2;
-			arbres.erase(arbres.begin()+ 0);
-		}
-		else if(temp2.nom=="NULL"){
+		if(temp.nom!="NULL"){
 			arbres[0]=temp;
 			arbres.erase(arbres.begin()+ 1);
 		}
-
-		/*cout<<"ARBRES FIN ----"<<endl;
-		for(int n=0; n<arbres.size()-1; n++){
-			afficherArbre(arbres[n]);
-			cout<<endl;
+		else{
+			temp = fusionArbre(arbres[1], arbres[0]);
+			arbres[1]=temp;
+			arbres.erase(arbres.begin()+ 0);
 		}
-		cout<<"----"<<endl;*/
 	}
 
 	return arbres[0];
