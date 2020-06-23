@@ -243,6 +243,7 @@ int main(int argc, char** argv,char** env){
 			}
 
 			Arbre A = generationArbre(branchesArbre);
+			branchesArbre.clear();
 			//afficherArbre(A);
 
 			//cout << endl << "ARBRE 2" << endl;
@@ -272,6 +273,7 @@ int main(int argc, char** argv,char** env){
 				}
 
 				Arbre A2 = generationArbre(branchesArbre2);
+				branchesArbre2.clear();
 
 				cout<<"A : ";
 				afficherArbre(A);
