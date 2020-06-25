@@ -24,7 +24,8 @@ then
 else
 	echo "arbre.sh			Manuel d'utilisation			arbre.sh() "	
 	cat $nomDeFichier
-fi
-rm $nomDeFichier
 
+fi
+
+rm $nomDeFichier
 

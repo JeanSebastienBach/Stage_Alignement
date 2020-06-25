@@ -2,7 +2,7 @@
 
 
 clear
-HELP="écrire l'aide !"
+HELP="comparaisonBash.sh			Manuel d'utilisation			comparaisonBash.sh \n "
 set -e
 
 while [[ $# > 0 ]] 
@@ -55,12 +55,15 @@ then
 	do 
 		if [[ "${i:0:2}" == "//" ]]
 		then
+
+			chaineUn="${i:2:${#i}-4}"
 			nbTotal=$(($nbTotal + 1))
 			for j in $(cat $optionAm)
 			do	
 				if [[ "${j:0:2}" == "//" ]]
 				then
-					if [[ $i == $j ]]
+					chaineDeux="${j:2:${#i}-4}"
+					if [[ $chaineUn == $chaineDeux ]]
 					then
 						match=true
 					fi
