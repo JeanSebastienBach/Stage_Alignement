@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 clear
 HELP="comparaisonBash.sh			Manuel d'utilisation			comparaisonBash.sh \n "
 set -e
@@ -30,6 +29,16 @@ do
     	    	then
     	    		shift
     	        	optionAg=${1}
+    	        else 
+    	        	echo "${HELP}"
+    	        	exit 0
+    	        fi
+    	    ;;
+    	    -fs)
+    	    	if [[ $# > 1 ]] 
+    	    	then
+    	    		shift
+    	        	optionFs=${1}
     	        else 
     	        	echo "${HELP}"
     	        	exit 0
@@ -80,5 +89,17 @@ then
 else
 	echo aïe
 fi
-echo $difference / $nbTotal
+if [[ -f "$optionFs" ]]
+then
+	resultat=$(echo "($nbTotal-$difference)/$nbTotal*100" | bc -l)
+	resultat=$(bc -l <<<"scale=4; $resultat / 1")\\
+	echo $resultat >> "$optionFs"
+	tr -d '\n' < "$optionFs" > temp.txt
+	cat temp.txt > "$optionFs"
+	rm temp.txt
+else
+	echo AH
+fi
+
+
 IFS=$old_IFS # rétablissement du séparateur de champ par défaut
