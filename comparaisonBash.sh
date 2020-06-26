@@ -1,7 +1,7 @@
 #!/bin/bash
 
 clear
-HELP="comparaisonBash.sh			Manuel d'utilisation			comparaisonBash.sh \n "
+HELP="comparaisonBash.sh			Manuel d'utilisation			comparaisonBash.sh \\n "
 set -e
 
 while [[ $# > 0 ]] 
@@ -87,18 +87,20 @@ then
 		fi
 	done
 else
-	echo aïe
+	echo "${HELP}"
 fi
 if [[ -f "$optionFs" ]]
 then
 	resultat=$(echo "($nbTotal-$difference)/$nbTotal*100" | bc -l)
-	resultat=$(bc -l <<<"scale=4; $resultat / 1")\\
+	resultat=$(bc -l <<<"scale=4; $resultat / 1")\\\
 	echo $resultat >> "$optionFs"
 	tr -d '\n' < "$optionFs" > temp.txt
 	cat temp.txt > "$optionFs"
 	rm temp.txt
 else
-	echo AH
+	resultat=$(echo "($nbTotal-$difference)/$nbTotal*100" | bc -l)
+	resultat=$(bc -l <<<"scale=4; $resultat / 1")
+	echo "Les arbres sont à $resultat% identiques."
 fi
 
 

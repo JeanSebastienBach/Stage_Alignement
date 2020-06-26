@@ -44,17 +44,21 @@ do
 done
 if [ "$nbMax" != false ] && [ "$nbMin" != false ] && [ "$tailleMax" != false ] && [ "$tailleMin" != false ]
 then
-	#for ((i=$tailleMin ; $i<=$tailleMax ; i++))
-	#do 
-	#	touch t-$i.txt
-	#	./stat.sh -l $i -n 35 -v 50 -f t-$i.txt
-	#done
-	#
+	for ((i=$tailleMin ; $i<=$tailleMax ; i++))
+	do 
+		echo "\\addplot " >> t-$i.txt
+		echo "table[row sep=\\\,y index=0] { " >> t-$i.txt
+		./stat.sh -l $i -n 35 -v 50 -f t-$i.txt
+		echo "};" >> t-$i.txt
+	done
+	
 	for ((j=$nbMin ; $j<=$nbMax ; j++))
 	do 
-		touch nb-$j.txt
+		echo "\\addplot " >> nb-$j.txt 
+		echo "table[row sep=\\\,y index=0] { " >> nb-$j.txt
 		./stat.sh -l 65 -n $j -v 50 -f nb-$j.txt
+		echo "};" >> nb-$j.txt
 	done
 else
-	echo NOP
+	echo "${HELP}"
 fi
